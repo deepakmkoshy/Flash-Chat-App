@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:flashchat/components/message_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flashchat/constants.dart';
+
+final _firestore = FirebaseFirestore.instance;
+auth.User loggedInUser;
 
 class ChatScreen extends StatefulWidget {
   static const String id = 'chat';
@@ -10,8 +15,9 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  final messageTextController = TextEditingController();
+  String messageText;
   final _auth = auth.FirebaseAuth.instance;
-  auth.User loggedInUser;
 
   void getCurrentUser() async {
     try {
@@ -22,6 +28,12 @@ class _ChatScreenState extends State<ChatScreen> {
     } catch (e) {
       print(e);
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    messageTextController.dispose();
   }
 
   @override
@@ -39,6 +51,8 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
+                _auth.signOut();
+                Navigator.pop(context);
                 //Implement logout functionality
               }),
         ],
@@ -50,6 +64,7 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            MessagesStream(),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
@@ -57,7 +72,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
+                      controller: messageTextController,
                       onChanged: (value) {
+                        messageText = value;
                         //Do something with the user input.
                       },
                       decoration: kMessageTextFieldDecoration,
@@ -65,6 +82,12 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   FlatButton(
                     onPressed: () {
+                      messageTextController.clear();
+                      _firestore.collection('messages').add({
+                        'text': messageText,
+                        'sender': loggedInUser.email,
+                        'created': FieldValue.serverTimestamp()
+                      });
                       //Implement send functionality.
                     },
                     child: Text(
@@ -78,6 +101,47 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class MessagesStream extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _firestore
+          .collection('messages')
+          .orderBy('created', descending: false)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final messages = snapshot.data.docs.reversed;
+          List<MessageBubble> messageWidgets = [];
+          for (var message in messages) {
+            final messageText = message.data()['text'];
+            final messageSender = message.data()['sender'];
+            final currentUser = loggedInUser.email;
+
+            final messageWidget = MessageBubble(
+                sender: messageSender,
+                text: messageText,
+                isMe: currentUser == messageSender);
+
+            messageWidgets.add(messageWidget);
+          }
+          return Expanded(
+            child: ListView(
+              reverse: true,
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              children: messageWidgets,
+            ),
+          );
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
   }
 }
