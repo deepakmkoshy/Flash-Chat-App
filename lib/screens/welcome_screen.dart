@@ -43,7 +43,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Flexible(
-                          child: Hero(
+                child: Hero(
                 tag: 'logo',
                 child: Container(
                   child: Image.asset('assets/images/logo.png'),

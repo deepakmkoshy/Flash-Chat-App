@@ -8,8 +8,10 @@ import 'package:flutter/material.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   runApp(FlashChat());
 }
+ 
 
 class FlashChat extends StatelessWidget {
   @override
@@ -22,7 +24,8 @@ class FlashChat extends StatelessWidget {
     };
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: WelcomeScreen.id,
+      initialRoute: WelcomeScreen.id, // Return here
+      // initialRoute: ChatScreen.id,
       routes: routes,
     );
   }
