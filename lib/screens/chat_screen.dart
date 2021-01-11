@@ -4,12 +4,11 @@ import 'package:audio_wave/audio_wave.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flashchat/components/message_bubble.dart';
-import 'package:flutter/material.dart';
 import 'package:flashchat/constants.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:random_string/random_string.dart' as random;
 
@@ -48,6 +47,8 @@ class _ChatScreenState extends State<ChatScreen> {
   String durationFb;
   String currentUser;
   bool isMe = true;
+
+  String tmpUrl = "www";
 
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
@@ -150,6 +151,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void play(String url) async {
+    tmpUrl = url;
+
     assert(_mPlayerIsInited &&
         _mplaybackReady &&
         _mRecorder.isStopped &&
@@ -251,7 +254,6 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget messageBubble(QueryDocumentSnapshot message) {
     // final height = MediaQuery.of(context).size.height;
     // final width = MediaQuery.of(context).size.width;
-    bool isPlay = false;
     return (type.contains('txt'))
         ? Padding(
             padding: EdgeInsets.all(10),
@@ -287,84 +289,93 @@ class _ChatScreenState extends State<ChatScreen> {
           )
         : Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Align(
-              alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-              child: Material(
-                borderRadius: BorderRadius.circular(10.0),
-                elevation: 2.0,
-                child: Container(
-                  padding: EdgeInsets.all(10.0),
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          CircleAvatar(
-                              // child: isMyMessage
-                              //     ? Text(widget.currentUserName.substring(0, 1))
-                              //     : Text(widget.chatUserName.substring(0, 1)),
-                              child: Text("D")),
-                          Text(durationFb)
-                        ],
-                      ),
-                      !_mPlayer.isPlaying
-                          ? SizedBox()
-                          : AudioWave(
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              width: MediaQuery.of(context).size.width * 0.15,
-                              beatRate: Duration(milliseconds: 100),
-                              spacing: 2.5,
-                              bars: [
-                                AudioWaveBar(
-                                    height: 10, color: Colors.lightBlueAccent),
-                                AudioWaveBar(height: 30, color: Colors.blue),
-                                AudioWaveBar(height: 70, color: Colors.black),
-                                AudioWaveBar(height: 40),
-                                AudioWaveBar(height: 20, color: Colors.orange),
-                                AudioWaveBar(
-                                    height: 10, color: Colors.lightBlueAccent),
-                                AudioWaveBar(height: 30, color: Colors.blue),
-                                AudioWaveBar(height: 70, color: Colors.black),
-                                AudioWaveBar(height: 40),
-                                AudioWaveBar(height: 20, color: Colors.orange),
-                                AudioWaveBar(
-                                    height: 10, color: Colors.lightBlueAccent),
-                                AudioWaveBar(height: 30, color: Colors.blue),
-                                AudioWaveBar(height: 70, color: Colors.black),
-                                AudioWaveBar(height: 40),
-                                AudioWaveBar(height: 20, color: Colors.orange),
-                                // AudioWaveBar(
-                                //     height: 10, color: Colors.lightBlueAccent),
-                                // AudioWaveBar(height: 30, color: Colors.blue),
-                                // AudioWaveBar(height: 70, color: Colors.black),
-                                // AudioWaveBar(height: 40),
-                                // AudioWaveBar(height: 20, color: Colors.orange),
-                              ],
-                            ),
-                      IconButton(
-                        icon: _mPlayer.isPlaying
-                            ? Icon(
-                                Icons.stop_circle_outlined,
-                                size: MediaQuery.of(context).size.height * 0.06,
-                              )
-                            : Icon(
-                                Icons.play_circle_filled,
-                                size: MediaQuery.of(context).size.height * 0.06,
+            child: Column(
+              crossAxisAlignment:
+                isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              children: [
+                Text(
+                messageSender,
+                style: TextStyle(fontSize: 12, color: Colors.black54),
+                textAlign: TextAlign.end,
+              ),
+                Material(
+                  borderRadius: BorderRadius.circular(10.0),
+                  elevation: 2.0,
+                  color: isMe ? Colors.lightBlueAccent : Colors.white,
+                  child: Container(
+                    padding: EdgeInsets.all(10.0),
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            CircleAvatar(
+                                // child: isMyMessage
+                                //     ? Text(widget.currentUserName.substring(0, 1))
+                                //     : Text(widget.chatUserName.substring(0, 1)),
+                                child: Text("D")),
+                            Text(durationFb,
+                            style: TextStyle(color:
+                               isMe?Colors.white: Colors.black))
+                          ],
+                        ),
+                        !(_mPlayer.isPlaying && tmpUrl == message.data()['content'])
+                            ? SizedBox()
+                            : AudioWave(
+                                height: MediaQuery.of(context).size.height * 0.08,
+                                width: MediaQuery.of(context).size.width * 0.15,
+                                beatRate: Duration(milliseconds: 100),
+                                spacing: 2.5,
+                                bars: [
+                                  AudioWaveBar(
+                                      height: 10, color: Colors.lightBlueAccent),
+                                  AudioWaveBar(height: 30, color: Colors.blue),
+                                  AudioWaveBar(height: 70, color: Colors.black),
+                                  AudioWaveBar(height: 40),
+                                  AudioWaveBar(height: 20, color: Colors.orange),
+                                  AudioWaveBar(
+                                      height: 10, color: Colors.lightBlueAccent),
+                                  AudioWaveBar(height: 30, color: Colors.blue),
+                                  AudioWaveBar(height: 70, color: Colors.black),
+                                  AudioWaveBar(height: 40),
+                                  AudioWaveBar(height: 20, color: Colors.orange),
+                                  AudioWaveBar(
+                                      height: 10, color: Colors.lightBlueAccent),
+                                  AudioWaveBar(height: 30, color: Colors.blue),
+                                  AudioWaveBar(height: 70, color: Colors.black),
+                                  AudioWaveBar(height: 40),
+                                  AudioWaveBar(height: 20, color: Colors.orange),
+                                ],
                               ),
-                        onPressed: () async {
-                          _mPlayer.isPlaying
-                              ? stopPlayer()
-                              : play(
-                                  message.data()['content']); //message.content
-                        },
-                      ),
-                    ],
+                        IconButton(
+                             icon: (_mPlayer.isPlaying && tmpUrl == message.data()['content'])?
+                               Icon(
+                                  Icons.stop_circle_outlined,
+                                  color: Colors.black,
+                                  size: MediaQuery.of(context).size.height * 0.06,
+                                )
+
+                                :
+                               Icon(
+                                  Icons.play_circle_filled,
+                                  color: Colors.black,
+                                  size: MediaQuery.of(context).size.height * 0.06,
+                                ),
+                          onPressed: () async {
+                            _mPlayer.isPlaying
+                                ? stopPlayer()
+                                : play(
+                                    message.data()['content']); //message.content
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
           );
   }
@@ -403,45 +414,70 @@ class _ChatScreenState extends State<ChatScreen> {
                   Expanded(
                     child: showWave
                         ? _mRecorder.isStopped
-                            ? SizedBox()
-                            : AudioWave(
-                                height: height * 0.1,
-                                width: width * 0.45,
-                                beatRate: Duration(milliseconds: 100),
-                                spacing: 2.5,
-                                bars: [
-                                  AudioWaveBar(
-                                      height: 10,
-                                      color: Colors.lightBlueAccent),
-                                  AudioWaveBar(height: 30, color: Colors.blue),
-                                  AudioWaveBar(height: 70, color: Colors.black),
-                                  AudioWaveBar(height: 40),
-                                  AudioWaveBar(
-                                      height: 20, color: Colors.orange),
-                                  AudioWaveBar(
-                                      height: 10,
-                                      color: Colors.lightBlueAccent),
-                                  AudioWaveBar(height: 30, color: Colors.blue),
-                                  AudioWaveBar(height: 70, color: Colors.black),
-                                  AudioWaveBar(height: 40),
-                                  AudioWaveBar(
-                                      height: 20, color: Colors.orange),
-                                  AudioWaveBar(
-                                      height: 10,
-                                      color: Colors.lightBlueAccent),
-                                  AudioWaveBar(height: 30, color: Colors.blue),
-                                  AudioWaveBar(height: 70, color: Colors.black),
-                                  AudioWaveBar(height: 40),
-                                  AudioWaveBar(
-                                      height: 20, color: Colors.orange),
-                                  AudioWaveBar(
-                                      height: 10,
-                                      color: Colors.lightBlueAccent),
-                                  AudioWaveBar(height: 30, color: Colors.blue),
-                                  AudioWaveBar(height: 70, color: Colors.black),
-                                  AudioWaveBar(height: 40),
-                                  AudioWaveBar(
-                                      height: 20, color: Colors.orange),
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(width: width * 0.05),
+                                  Icon(Icons.fiber_manual_record,
+                                      color: Colors.red),
+                                  SizedBox(width: width * 0.01),
+                                  Text(
+                                    dur,
+                                    style: TextStyle(fontSize: width / 18),
+                                  )
+                                ],
+                              )
+                            : Row(
+                                children: [
+                                  SizedBox(width: width * 0.05),
+                                  AudioWave(
+                                    height: height * 0.08,
+                                    width: width * 0.45,
+                                    beatRate: Duration(milliseconds: 100),
+                                    spacing: 2.5,
+                                    bars: [
+                                      AudioWaveBar(
+                                          height: 10,
+                                          color: Colors.lightBlueAccent),
+                                      AudioWaveBar(
+                                          height: 30, color: Colors.blue),
+                                      AudioWaveBar(
+                                          height: 70, color: Colors.black),
+                                      AudioWaveBar(height: 40),
+                                      AudioWaveBar(
+                                          height: 20, color: Colors.orange),
+                                      AudioWaveBar(
+                                          height: 10,
+                                          color: Colors.lightBlueAccent),
+                                      AudioWaveBar(
+                                          height: 30, color: Colors.blue),
+                                      AudioWaveBar(
+                                          height: 70, color: Colors.black),
+                                      AudioWaveBar(height: 40),
+                                      AudioWaveBar(
+                                          height: 20, color: Colors.orange),
+                                      AudioWaveBar(
+                                          height: 10,
+                                          color: Colors.lightBlueAccent),
+                                      AudioWaveBar(
+                                          height: 30, color: Colors.blue),
+                                      AudioWaveBar(
+                                          height: 70, color: Colors.black),
+                                      AudioWaveBar(height: 40),
+                                      AudioWaveBar(
+                                          height: 20, color: Colors.orange),
+                                      AudioWaveBar(
+                                          height: 10,
+                                          color: Colors.lightBlueAccent),
+                                      AudioWaveBar(
+                                          height: 30, color: Colors.blue),
+                                      AudioWaveBar(
+                                          height: 70, color: Colors.black),
+                                      AudioWaveBar(height: 40),
+                                      AudioWaveBar(
+                                          height: 20, color: Colors.orange),
+                                    ],
+                                  ),
                                 ],
                               )
                         : TextField(
@@ -530,25 +566,17 @@ class _ChatScreenState extends State<ChatScreen> {
             Widget messageWidget;
 
             if (type == 'txt') {
-              // print(message.data()['text']);
               text = message.data()['text'].toString();
+              isMe = currentUser == messageSender;
 
               messageWidget = messageBubble(message);
 
-              // messageSender,
-              // text: messageText,
-              // type: type,
-              // isMe: currentUser == messageSender);
 
             } else {
-              // setState(() {
               content = message.data()['content'];
               durationFb = message.data()['duration'];
-              // });
-              // setState(() {
               isMe = currentUser == messageSender;
               messageWidget = messageBubble(message);
-              // });
             }
             messageWidgets.add(messageWidget);
           }
