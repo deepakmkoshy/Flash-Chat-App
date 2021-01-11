@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flashchat/screens/chat_screen.dart';
+import 'package:flashchat/screens/login.dart';
 import 'package:flashchat/screens/login_screen.dart';
 import 'package:flashchat/screens/registration_screen.dart';
 import 'package:flashchat/screens/welcome_screen.dart';
@@ -24,9 +25,10 @@ class FlashChat extends StatelessWidget {
     };
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: WelcomeScreen.id, // Return here
+      // initialRoute: WelcomeScreen.id, // Return here
       // initialRoute: ChatScreen.id,
       routes: routes,
+      home: LoginNew(),
     );
   }
 }
