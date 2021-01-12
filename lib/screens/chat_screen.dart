@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:audio_wave/audio_wave.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flashchat/components/auth.dart';
+import 'package:flashchat/components/wave.dart';
 import 'package:flashchat/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -259,8 +259,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget messageBubble(QueryDocumentSnapshot message) {
-    // final height = MediaQuery.of(context).size.height;
-    // final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    final width   = MediaQuery.of(context).size.width;
     return (type.contains('txt'))
         ? Padding(
             padding: EdgeInsets.all(8),
@@ -316,9 +316,6 @@ class _ChatScreenState extends State<ChatScreen> {
                             CircleAvatar(
                               backgroundImage:
                                   NetworkImage(message.data()['photo']),
-                              // child: isMyMessage
-                              //     ? Text(widget.currentUserName.substring(0, 1))
-                              //     : Text(widget.chatUserName.substring(0, 1)),
                             ),
                             SizedBox(height: 2),
                             Text(durationFb,
@@ -329,39 +326,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         !(_mPlayer.isPlaying &&
                                 tmpUrl == message.data()['content'])
                             ? SizedBox()
-                            : AudioWave(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.08,
-                                width: MediaQuery.of(context).size.width * 0.15,
-                                beatRate: Duration(milliseconds: 100),
-                                spacing: 2.5,
-                                bars: [
-                                  AudioWaveBar(
-                                      height: 10,
-                                      color: Colors.lightBlueAccent),
-                                  AudioWaveBar(height: 30, color: Colors.blue),
-                                  AudioWaveBar(height: 70, color: Colors.black),
-                                  AudioWaveBar(height: 40),
-                                  AudioWaveBar(
-                                      height: 20, color: Colors.orange),
-                                  AudioWaveBar(
-                                      height: 10,
-                                      color: Colors.lightBlueAccent),
-                                  AudioWaveBar(height: 30, color: Colors.blue),
-                                  AudioWaveBar(height: 70, color: Colors.black),
-                                  AudioWaveBar(height: 40),
-                                  AudioWaveBar(
-                                      height: 20, color: Colors.orange),
-                                  AudioWaveBar(
-                                      height: 10,
-                                      color: Colors.lightBlueAccent),
-                                  AudioWaveBar(height: 30, color: Colors.blue),
-                                  AudioWaveBar(height: 70, color: Colors.black),
-                                  AudioWaveBar(height: 40),
-                                  AudioWaveBar(
-                                      height: 20, color: Colors.orange),
-                                ],
-                              ),
+
+                            :Wave(height: height *0.08, width: width *0.15, isFull: false,),
+                            
                         IconButton(
                           padding: EdgeInsets.symmetric(horizontal: 0),
                           iconSize: MediaQuery.of(context).size.height * 0.06,
@@ -429,91 +396,32 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   Expanded(
                     child: showWave
-                        ? 
-                        _mRecorder.isStopped
-                        ?TextField(
-                            controller: messageTextController,
-                            onChanged: (value) {
-                              setState(() {
-                                if (value == '') {
-                                  sendButtonVisible = false;
-                                  recordButtonVisible = true;
-                                } else {
-                                  sendButtonVisible = true;
-                                  recordButtonVisible = false;
-                                }
-                              });
+                        ? _mRecorder.isStopped
+                            ? TextField(
+                                controller: messageTextController,
+                                onChanged: (value) {
+                                  setState(() {
+                                    if (value == '') {
+                                      sendButtonVisible = false;
+                                      recordButtonVisible = true;
+                                    } else {
+                                      sendButtonVisible = true;
+                                      recordButtonVisible = false;
+                                    }
+                                  });
 
-                              messageText = value;
-                              //Do something with the user input.
-                            },
-                            decoration: kMessageTextFieldDecoration,
-                          )
-                            // ? Row(
-                            //     mainAxisAlignment: MainAxisAlignment.center,
-                            //     children: [
-                            //       SizedBox(width: width * 0.05),
-                            //       Icon(Icons.fiber_manual_record,
-                            //           color: Colors.red),
-                            //       SizedBox(width: width * 0.01),
-                            //       Text(
-                            //         dur,
-                            //         style: TextStyle(fontSize: width / 18),
-                            //       )
-                            //     ],
-                            //   )
-                            : 
-                            Row(
+                                  messageText = value;
+                                  //Do something with the user input.
+                                },
+                                decoration: kMessageTextFieldDecoration,
+                              )
+        
+                            : Row(
                                 children: [
                                   SizedBox(width: width * 0.05),
-                                  AudioWave(
-                                    height: height * 0.08,
-                                    width: width * 0.45,
-                                    beatRate: Duration(milliseconds: 100),
-                                    spacing: 2.5,
-                                    bars: [
-                                      AudioWaveBar(
-                                          height: 10,
-                                          color: Colors.lightBlueAccent),
-                                      AudioWaveBar(
-                                          height: 30, color: Colors.blue),
-                                      AudioWaveBar(
-                                          height: 70, color: Colors.black),
-                                      AudioWaveBar(height: 40),
-                                      AudioWaveBar(
-                                          height: 20, color: Colors.orange),
-                                      AudioWaveBar(
-                                          height: 10,
-                                          color: Colors.lightBlueAccent),
-                                      AudioWaveBar(
-                                          height: 30, color: Colors.blue),
-                                      AudioWaveBar(
-                                          height: 70, color: Colors.black),
-                                      AudioWaveBar(height: 40),
-                                      AudioWaveBar(
-                                          height: 20, color: Colors.orange),
-                                      AudioWaveBar(
-                                          height: 10,
-                                          color: Colors.lightBlueAccent),
-                                      AudioWaveBar(
-                                          height: 30, color: Colors.blue),
-                                      AudioWaveBar(
-                                          height: 70, color: Colors.black),
-                                      AudioWaveBar(height: 40),
-                                      AudioWaveBar(
-                                          height: 20, color: Colors.orange),
-                                      AudioWaveBar(
-                                          height: 10,
-                                          color: Colors.lightBlueAccent),
-                                      AudioWaveBar(
-                                          height: 30, color: Colors.blue),
-                                      AudioWaveBar(
-                                          height: 70, color: Colors.black),
-                                      AudioWaveBar(height: 40),
-                                      AudioWaveBar(
-                                          height: 20, color: Colors.orange),
-                                    ],
-                                  ),
+                            Wave(height: height*0.08, width: width*0.45, isFull: true),
+
+                                
                                 ],
                               )
                         : TextField(
@@ -535,49 +443,28 @@ class _ChatScreenState extends State<ChatScreen> {
                             decoration: kMessageTextFieldDecoration,
                           ),
                   ),
-                  // IconButton(
-                  //   icon: Icon(Icons.keyboard_voice),
-                  //   onPressed: (){},
-                  // ),
-                  // messageTextController.value?
-                  // Visibility(
-                  //   visible: recordButtonVisible,
-                  //   child: IconButton(
-                  //       icon: _mRecorder.isStopped
-                  //           ? Icon(Icons.keyboard_voice)
-                  //           : Icon(Icons.stop),
-                  //       onPressed: getRecorder()),
-                  // ),
-
-                  //Test with gesture detector
-
                   Visibility(
                     visible: recordButtonVisible,
                     child: GestureDetector(
-                      
-                      onTap:() => Fluttertoast.showToast(msg: "Hold to record, release to send",
+                      onTap: () => Fluttertoast.showToast(
+                        msg: "Hold to record, release to send",
                       ),
                       onLongPress: getRecorder(),
                       onLongPressEnd: (longPressEndDetails) {
                         stopRecorder().then((value) async {
-                     await duration();
+                          await duration();
                         });
                         sendMessage();
                       },
                       child: Padding(
                         padding: EdgeInsets.all(8),
-                                              child: Icon(
-                          
-                            // _mRecorder.isStopped
-                            Icons.keyboard_voice,
-                            size: width*0.1,
-                            // : (Icons.stop),
-                            ),
+                        child: Icon(
+                          Icons.keyboard_voice,
+                          size: width * 0.1,
+                        ),
                       ),
                     ),
                   ),
-                  //End test
-
                   Visibility(
                     visible: sendButtonVisible,
                     child: IconButton(
@@ -599,7 +486,6 @@ class _ChatScreenState extends State<ChatScreen> {
                         } else {
                           sendMessage();
                         }
-                        //Implement send functionality.
                       },
                     ),
                   ),
