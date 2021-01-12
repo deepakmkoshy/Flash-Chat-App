@@ -119,16 +119,14 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> stopPlayer() async {
     await _mPlayer.stopPlayer();
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   Future<void> stopRecorder() async {
     await _mRecorder.stopRecorder();
     _mplaybackReady = true;
-    recordButtonVisible = false;
-    sendButtonVisible = true;
+    // recordButtonVisible = false;
+    // sendButtonVisible = true;
   }
 
   Future<void> record() async {
@@ -155,16 +153,19 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void play(String url) async {
     tmpUrl = url;
-
+    print("Is init$_mPlayerIsInited");
+    print("playback ready $_mplaybackReady");
+    print("rec ${_mRecorder.isStopped}");
+    print("play ${_mPlayer.isStopped}");
     assert(_mPlayerIsInited &&
         _mplaybackReady &&
         _mRecorder.isStopped &&
         _mPlayer.isStopped);
 
-    // print("Is init$_mPlayerIsInited");
-    // print("playback ready $_mplaybackReady");
-    // print("rec ${_mRecorder.isStopped}");
-    // print("play ${_mPlayer.isStopped}");
+    print("Is init$_mPlayerIsInited");
+    print("playback ready $_mplaybackReady");
+    print("rec ${_mRecorder.isStopped}");
+    print("play ${_mPlayer.isStopped}");
 
     await _mPlayer.startPlayer(
         fromURI: url,
@@ -236,8 +237,9 @@ class _ChatScreenState extends State<ChatScreen> {
     FirebaseFirestore.instance.runTransaction((transaction) async {
       transaction.set(
         documentReference,
-        { 'name' : name,
-            'photo': imageUrl,
+        {
+          'name': name,
+          'photo': imageUrl,
           'duration': dur,
           'type': "voice",
           'sender': email,
@@ -266,7 +268,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [
                 Text(
-                  name,
+                  message.data()['name'],
                   style: TextStyle(fontSize: 12, color: Colors.black54),
                 ),
                 Material(
@@ -297,28 +299,27 @@ class _ChatScreenState extends State<ChatScreen> {
               crossAxisAlignment:
                   isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [
-               
                 Material(
                   borderRadius: BorderRadius.circular(10.0),
                   elevation: 2.0,
                   color: isMe ? Colors.lightBlueAccent : Colors.white,
                   child: Container(
-                    padding: EdgeInsets.all(5.0),
+                    padding: EdgeInsets.all(6.0),
                     width: MediaQuery.of(context).size.width * 0.5,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             CircleAvatar(
-                              backgroundImage: NetworkImage(message.data()['photo']),
-                                // child: isMyMessage
-                                //     ? Text(widget.currentUserName.substring(0, 1))
-                                //     : Text(widget.chatUserName.substring(0, 1)),
+                              backgroundImage:
+                                  NetworkImage(message.data()['photo']),
+                              // child: isMyMessage
+                              //     ? Text(widget.currentUserName.substring(0, 1))
+                              //     : Text(widget.chatUserName.substring(0, 1)),
                             ),
-                            SizedBox(height:2),
+                            SizedBox(height: 2),
                             Text(durationFb,
                                 style: TextStyle(
                                     color: isMe ? Colors.white : Colors.black))
@@ -361,19 +362,21 @@ class _ChatScreenState extends State<ChatScreen> {
                                 ],
                               ),
                         IconButton(
+                          padding: EdgeInsets.symmetric(horizontal: 0),
+                          iconSize: MediaQuery.of(context).size.height * 0.06,
                           icon: (_mPlayer.isPlaying &&
                                   tmpUrl == message.data()['content'])
                               ? Icon(
                                   Icons.stop_circle_outlined,
                                   color: Colors.black,
-                                  size:
-                                      MediaQuery.of(context).size.height * 0.06,
+                                  // size:
+                                  //     MediaQuery.of(context).size.height * 0.06,
                                 )
                               : Icon(
                                   Icons.play_arrow,
                                   color: Colors.black,
-                                  size:
-                                      MediaQuery.of(context).size.height * 0.06,
+                                  // size:
+                                  //     MediaQuery.of(context).size.height * 0.06,
                                 ),
                           onPressed: () async {
                             _mPlayer.isPlaying
@@ -425,21 +428,41 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   Expanded(
                     child: showWave
-                        ? _mRecorder.isStopped
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(width: width * 0.05),
-                                  Icon(Icons.fiber_manual_record,
-                                      color: Colors.red),
-                                  SizedBox(width: width * 0.01),
-                                  Text(
-                                    dur,
-                                    style: TextStyle(fontSize: width / 18),
-                                  )
-                                ],
-                              )
-                            : Row(
+                        ? 
+                        _mRecorder.isStopped
+                        ?TextField(
+                            controller: messageTextController,
+                            onChanged: (value) {
+                              setState(() {
+                                if (value == '') {
+                                  sendButtonVisible = false;
+                                  recordButtonVisible = true;
+                                } else {
+                                  sendButtonVisible = true;
+                                  recordButtonVisible = false;
+                                }
+                              });
+
+                              messageText = value;
+                              //Do something with the user input.
+                            },
+                            decoration: kMessageTextFieldDecoration,
+                          )
+                            // ? Row(
+                            //     mainAxisAlignment: MainAxisAlignment.center,
+                            //     children: [
+                            //       SizedBox(width: width * 0.05),
+                            //       Icon(Icons.fiber_manual_record,
+                            //           color: Colors.red),
+                            //       SizedBox(width: width * 0.01),
+                            //       Text(
+                            //         dur,
+                            //         style: TextStyle(fontSize: width / 18),
+                            //       )
+                            //     ],
+                            //   )
+                            : 
+                            Row(
                                 children: [
                                   SizedBox(width: width * 0.05),
                                   AudioWave(
@@ -516,14 +539,36 @@ class _ChatScreenState extends State<ChatScreen> {
                   //   onPressed: (){},
                   // ),
                   // messageTextController.value?
+                  // Visibility(
+                  //   visible: recordButtonVisible,
+                  //   child: IconButton(
+                  //       icon: _mRecorder.isStopped
+                  //           ? Icon(Icons.keyboard_voice)
+                  //           : Icon(Icons.stop),
+                  //       onPressed: getRecorder()),
+                  // ),
+
+                  //Test with gesture detector
+
                   Visibility(
                     visible: recordButtonVisible,
-                    child: IconButton(
-                        icon: _mRecorder.isStopped
-                            ? Icon(Icons.keyboard_voice)
-                            : Icon(Icons.stop),
-                        onPressed: getRecorder()),
+                    child: GestureDetector(
+                      onLongPress: getRecorder(),
+                      onLongPressEnd: (longPressEndDetails) {
+                        stopRecorder().then((value) async {
+              await duration();
+            });
+                        sendMessage();
+                      },
+                      child: Icon(
+                          // _mRecorder.isStopped
+                          (Icons.keyboard_voice)
+                          // : (Icons.stop),
+                          ),
+                    ),
                   ),
+                  //End test
+
                   Visibility(
                     visible: sendButtonVisible,
                     child: IconButton(
@@ -534,6 +579,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           _firestore.collection('messages').add({
                             'text': messageText,
                             'type': "txt",
+                            'name': name,
                             'sender': loggedInUser.email,
                             'created': FieldValue.serverTimestamp()
                           });
