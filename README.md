@@ -1,16 +1,17 @@
-# flashchat
+# Chat App with Voice chat
 
-A new Flutter project.
+v 0.2.0: Implemented voice chat
 
-## Getting Started
+Implemented voice chat sucessfully with flutter sound, firebase storage. Lots of thing to finish, the code is a mess right now. Have to refactor it.
 
-This project is a starting point for a Flutter application.
+## ToDo
 
-A few resources to get you started if this is your first Flutter project:
+* Refactor the code
+* Add server timestamp
+* Longpresses audio rec like in whatsapp
+* Use provider for managing state
+* Multiple users with separate chat channels
+* Voice/Video call with Agora
+* Already logged in to homepage
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
