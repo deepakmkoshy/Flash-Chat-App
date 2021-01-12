@@ -31,6 +31,7 @@ dependencies:
   firebase_core: ^0.5.3
   firebase_storage: ^5.2.0
   flutter_sound: ^7.5.0+2
+  fluttertoast: ^7.1.6
   google_sign_in: ^4.5.9
   modal_progress_hud: ^0.1.3
   permission_handler: ^5.0.1+1

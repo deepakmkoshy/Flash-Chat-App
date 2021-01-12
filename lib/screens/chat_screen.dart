@@ -8,6 +8,7 @@ import 'package:flashchat/components/auth.dart';
 import 'package:flashchat/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -553,18 +554,26 @@ class _ChatScreenState extends State<ChatScreen> {
                   Visibility(
                     visible: recordButtonVisible,
                     child: GestureDetector(
+                      
+                      onTap:() => Fluttertoast.showToast(msg: "Hold to record, release to send",
+                      ),
                       onLongPress: getRecorder(),
                       onLongPressEnd: (longPressEndDetails) {
                         stopRecorder().then((value) async {
-              await duration();
-            });
+                     await duration();
+                        });
                         sendMessage();
                       },
-                      child: Icon(
-                          // _mRecorder.isStopped
-                          (Icons.keyboard_voice)
-                          // : (Icons.stop),
-                          ),
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                                              child: Icon(
+                          
+                            // _mRecorder.isStopped
+                            Icons.keyboard_voice,
+                            size: width*0.1,
+                            // : (Icons.stop),
+                            ),
+                      ),
                     ),
                   ),
                   //End test
