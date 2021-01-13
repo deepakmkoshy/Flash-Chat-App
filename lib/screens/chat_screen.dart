@@ -260,7 +260,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget messageBubble(QueryDocumentSnapshot message) {
     final height = MediaQuery.of(context).size.height;
-    final width   = MediaQuery.of(context).size.width;
+    final width = MediaQuery.of(context).size.width;
     return (type.contains('txt'))
         ? Padding(
             padding: EdgeInsets.all(8),
@@ -326,9 +326,11 @@ class _ChatScreenState extends State<ChatScreen> {
                         !(_mPlayer.isPlaying &&
                                 tmpUrl == message.data()['content'])
                             ? SizedBox()
-
-                            :Wave(height: height *0.08, width: width *0.15, isFull: false,),
-                            
+                            : Wave(
+                                height: height * 0.08,
+                                width: width * 0.15,
+                                isFull: false,
+                              ),
                         IconButton(
                           padding: EdgeInsets.symmetric(horizontal: 0),
                           iconSize: MediaQuery.of(context).size.height * 0.06,
@@ -337,14 +339,10 @@ class _ChatScreenState extends State<ChatScreen> {
                               ? Icon(
                                   Icons.stop_circle_outlined,
                                   color: Colors.black,
-                                  // size:
-                                  //     MediaQuery.of(context).size.height * 0.06,
                                 )
                               : Icon(
                                   Icons.play_arrow,
                                   color: Colors.black,
-                                  // size:
-                                  //     MediaQuery.of(context).size.height * 0.06,
                                 ),
                           onPressed: () async {
                             _mPlayer.isPlaying
@@ -415,13 +413,13 @@ class _ChatScreenState extends State<ChatScreen> {
                                 },
                                 decoration: kMessageTextFieldDecoration,
                               )
-        
                             : Row(
                                 children: [
                                   SizedBox(width: width * 0.05),
-                            Wave(height: height*0.08, width: width*0.45, isFull: true),
-
-                                
+                                  Wave(
+                                      height: height * 0.08,
+                                      width: width * 0.45,
+                                      isFull: true),
                                 ],
                               )
                         : TextField(
@@ -467,26 +465,32 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   Visibility(
                     visible: sendButtonVisible,
-                    child: IconButton(
-                      icon: Icon(Icons.send),
-                      onPressed: () {
-                        if (isTextMsg) {
-                          messageTextController.clear();
-                          _firestore.collection('messages').add({
-                            'text': messageText,
-                            'type': "txt",
-                            'name': name,
-                            'sender': loggedInUser.email,
-                            'created': FieldValue.serverTimestamp()
-                          });
-                          setState(() {
-                            sendButtonVisible = false;
-                            recordButtonVisible = true;
-                          });
-                        } else {
-                          sendMessage();
-                        }
-                      },
+                    child: Padding(
+                      padding: EdgeInsets.all(2),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.send,
+                          size: width * 0.1,
+                        ),
+                        onPressed: () {
+                          if (isTextMsg) {
+                            messageTextController.clear();
+                            _firestore.collection('messages').add({
+                              'text': messageText,
+                              'type': "txt",
+                              'name': name,
+                              'sender': loggedInUser.email,
+                              'created': FieldValue.serverTimestamp()
+                            });
+                            setState(() {
+                              sendButtonVisible = false;
+                              recordButtonVisible = true;
+                            });
+                          } else {
+                            sendMessage();
+                          }
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -506,29 +510,23 @@ class _ChatScreenState extends State<ChatScreen> {
           .orderBy('created', descending: false)
           .snapshots(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
-        // print(snapshot.data.docs[0].data()['type']);
         if (snapshot.hasData) {
           final messages = snapshot.data.docs.reversed;
           List<Widget> messageWidgets = [];
           for (var message in messages) {
             currentUser = email;
             type = message.data()['type'];
-            // print(type == 'txt');
             messageSender = message.data()['sender'];
+            isMe = currentUser == messageSender;
             Widget messageWidget;
 
             if (type == 'txt') {
-              text = message.data()['text'].toString();
-              isMe = currentUser == messageSender;
-
-              messageWidget = messageBubble(message);
+              text = message.data()['text'];
             } else {
               content = message.data()['content'];
               durationFb = message.data()['duration'];
-              isMe = currentUser == messageSender;
-              messageWidget = messageBubble(message);
             }
+            messageWidget = messageBubble(message);
             messageWidgets.add(messageWidget);
           }
           return ListView(
@@ -536,7 +534,6 @@ class _ChatScreenState extends State<ChatScreen> {
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             children: messageWidgets,
           );
-          // );
         } else {
           return Center(
             child: CircularProgressIndicator(),
@@ -546,59 +543,3 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 }
-
-// class MessagesStream extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return StreamBuilder<QuerySnapshot>(
-//       stream: _firestore
-//           .collection('messages')
-//           .orderBy('created', descending: false)
-//           .snapshots(),
-//       builder: (context, snapshot) {
-//         if (snapshot.hasData) {
-//           final messages = snapshot.data.docs.reversed;
-//           List<MessageBubble> messageWidgets = [];
-//           for (var message in messages) {
-//             final currentUser = loggedInUser.email;
-//             final type = message.data()['type'];
-//             final messageSender = message.data()['sender'];
-//             MessageBubble messageWidget;
-
-//             if (type == 'txt') {
-//               final messageText = message.data()['text'];
-
-//               messageWidget = MessageBubble(
-//                   sender: messageSender,
-//                   text: messageText,
-//                   type: type,
-//                   isMe: currentUser == messageSender);
-//             } else {
-//               final content = message.data()['content'];
-//               final duration = message.data()['duration'];
-
-//               messageWidget = MessageBubble(
-//                   sender: messageSender,
-//                   url: content,
-//                   type: type,
-//                   duration: duration,
-//                   isMe: currentUser == messageSender);
-//             }
-//             messageWidgets.add(messageWidget);
-//           }
-//           return Expanded(
-//             child: ListView(
-//               reverse: true,
-//               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-//               children: messageWidgets,
-//             ),
-//           );
-//         } else {
-//           return Center(
-//             child: CircularProgressIndicator(),
-//           );
-//         }
-//       },
-//     );
-//   }
-// }
