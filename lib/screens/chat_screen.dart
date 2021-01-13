@@ -38,7 +38,6 @@ class _ChatScreenState extends State<ChatScreen> {
   bool sendButtonVisible = false;
   bool showWave = false;
   bool recordButtonVisible = true;
-  bool isThereURL = true;
   bool isTextMsg = true;
   String dur = "0:00";
 
@@ -69,7 +68,6 @@ class _ChatScreenState extends State<ChatScreen> {
   void dispose() {
     super.dispose();
     messageTextController.dispose();
-    // stopPlayer();
     _mPlayer.closeAudioSession();
     _mPlayer = null;
 
@@ -103,11 +101,12 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> getPermissions() async {
     var statusMic = await Permission.microphone.request();
-    var statusStorage = await Permission.storage.request();
 
-    if (statusMic == PermissionStatus.denied ||
-        statusStorage == PermissionStatus.denied) {
-      throw RecordingPermissionException('Microphone permission not granted');
+    if (statusMic == PermissionStatus.denied) {
+      Fluttertoast.showToast(
+          msg: "Kindly allow mic access for sending voice messages");
+      await Future.delayed(Duration(seconds: 1));
+      getPermissions();
     }
   }
 
@@ -126,8 +125,6 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> stopRecorder() async {
     await _mRecorder.stopRecorder();
     _mplaybackReady = true;
-    // recordButtonVisible = false;
-    // sendButtonVisible = true;
   }
 
   Future<void> record() async {
@@ -136,6 +133,7 @@ class _ChatScreenState extends State<ChatScreen> {
       isTextMsg = false;
       sendButtonVisible = false;
     });
+
     var tempDir = await getApplicationDocumentsDirectory();
     String newFilePath = p.join(tempDir.path, _randomString(10));
     _mPath = '$newFilePath.aac';
@@ -143,30 +141,22 @@ class _ChatScreenState extends State<ChatScreen> {
     if (outputFile.existsSync()) {
       await outputFile.delete();
     }
+
     assert(_mRecorderIsInited && _mPlayer.isStopped);
     await _mRecorder.startRecorder(
       toFile: _mPath,
       codec: Codec.aacADTS,
     );
-
     setState(() {});
   }
 
   void play(String url) async {
     tmpUrl = url;
-    print("Is init$_mPlayerIsInited");
-    print("playback ready $_mplaybackReady");
-    print("rec ${_mRecorder.isStopped}");
-    print("play ${_mPlayer.isStopped}");
+
     assert(_mPlayerIsInited &&
         _mplaybackReady &&
         _mRecorder.isStopped &&
         _mPlayer.isStopped);
-
-    print("Is init$_mPlayerIsInited");
-    print("playback ready $_mplaybackReady");
-    print("rec ${_mRecorder.isStopped}");
-    print("play ${_mPlayer.isStopped}");
 
     await _mPlayer.startPlayer(
         fromURI: url,
@@ -374,17 +364,14 @@ class _ChatScreenState extends State<ChatScreen> {
               onPressed: () {
                 signOutGoogle();
                 Navigator.pop(context);
-                //Implement logout functionality
               }),
         ],
         title: Text('⚡️Chat'),
+        centerTitle: true,
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: SafeArea(
-        // child: SingleChildScrollView(
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Expanded(child: messagesStream()),
             Container(
@@ -395,24 +382,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   Expanded(
                     child: showWave
                         ? _mRecorder.isStopped
-                            ? TextField(
-                                controller: messageTextController,
-                                onChanged: (value) {
-                                  setState(() {
-                                    if (value == '') {
-                                      sendButtonVisible = false;
-                                      recordButtonVisible = true;
-                                    } else {
-                                      sendButtonVisible = true;
-                                      recordButtonVisible = false;
-                                    }
-                                  });
-
-                                  messageText = value;
-                                  //Do something with the user input.
-                                },
-                                decoration: kMessageTextFieldDecoration,
-                              )
+                            ? textField()
                             : Row(
                                 children: [
                                   SizedBox(width: width * 0.05),
@@ -422,24 +392,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                       isFull: true),
                                 ],
                               )
-                        : TextField(
-                            controller: messageTextController,
-                            onChanged: (value) {
-                              setState(() {
-                                if (value == '') {
-                                  sendButtonVisible = false;
-                                  recordButtonVisible = true;
-                                } else {
-                                  sendButtonVisible = true;
-                                  recordButtonVisible = false;
-                                }
-                              });
-
-                              messageText = value;
-                              //Do something with the user input.
-                            },
-                            decoration: kMessageTextFieldDecoration,
-                          ),
+                        : textField()
                   ),
                   Visibility(
                     visible: recordButtonVisible,
@@ -500,6 +453,25 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ),
       // ),
+    );
+  }
+
+  Widget textField() {
+    return TextField(
+      controller: messageTextController,
+      onChanged: (value) {
+        setState(() {
+          if (value == '') {
+            sendButtonVisible = false;
+            recordButtonVisible = true;
+          } else {
+            sendButtonVisible = true;
+            recordButtonVisible = false;
+          }
+        });
+        messageText = value;
+      },
+      decoration: kMessageTextFieldDecoration,
     );
   }
 
