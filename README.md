@@ -21,3 +21,6 @@ Implemented voice chat sucessfully with flutter sound, firebase storage. Lots of
 ## Refactoring in progress
 
 Separated the wave widget into separate file in components(Needs some refactoring within, check back later)
+
+Really dont have much idea on how to separate the audio recording logic from the ui part. Have to learn more and then come back to refactor. 
+Refactor branch will be used for refactoring tests
