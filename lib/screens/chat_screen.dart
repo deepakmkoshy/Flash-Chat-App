@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flashchat/components/auth.dart';
+import 'package:flashchat/components/message_bubble.dart';
 import 'package:flashchat/components/wave.dart';
 import 'package:flashchat/constants.dart';
 import 'package:flutter/material.dart';
@@ -251,39 +252,10 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget messageBubble(QueryDocumentSnapshot message) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    var content = message.data()['content'];
+    
     return (type.contains('txt'))
-        ? Padding(
-            padding: EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment:
-                  isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-              children: [
-                Text(
-                  message.data()['name'],
-                  style: TextStyle(fontSize: 12, color: Colors.black54),
-                ),
-                Material(
-                  elevation: 5,
-                  borderRadius: BorderRadius.only(
-                    topRight: isMe ? Radius.zero : Radius.circular(30),
-                    topLeft: isMe ? Radius.circular(30) : Radius.zero,
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
-                  ),
-                  color: isMe ? Colors.lightBlueAccent : Colors.white,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                    child: Text(
-                      text,
-                      style: TextStyle(
-                          color: isMe ? Colors.white : Colors.black54,
-                          fontSize: 15),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
+        ? TextMessageBubble(message: message, isMe: isMe)
         : Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -314,7 +286,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           ],
                         ),
                         !(_mPlayer.isPlaying &&
-                                tmpUrl == message.data()['content'])
+                                tmpUrl == content)
                             ? SizedBox()
                             : Wave(
                                 height: height * 0.08,
@@ -325,7 +297,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           padding: EdgeInsets.symmetric(horizontal: 0),
                           iconSize: MediaQuery.of(context).size.height * 0.06,
                           icon: (_mPlayer.isPlaying &&
-                                  tmpUrl == message.data()['content'])
+                                  tmpUrl == content)
                               ? Icon(
                                   Icons.stop_circle_outlined,
                                   color: Colors.black,
@@ -337,8 +309,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           onPressed: () async {
                             _mPlayer.isPlaying
                                 ? stopPlayer()
-                                : play(message
-                                    .data()['content']); //message.content
+                                : play(content); //message.content
                           },
                         ),
                       ],
@@ -380,20 +351,19 @@ class _ChatScreenState extends State<ChatScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Expanded(
-                    child: showWave
-                        ? _mRecorder.isStopped
-                            ? textField()
-                            : Row(
-                                children: [
-                                  SizedBox(width: width * 0.05),
-                                  Wave(
-                                      height: height * 0.08,
-                                      width: width * 0.45,
-                                      isFull: true),
-                                ],
-                              )
-                        : textField()
-                  ),
+                      child: showWave
+                          ? _mRecorder.isStopped
+                              ? textField()
+                              : Row(
+                                  children: [
+                                    SizedBox(width: width * 0.05),
+                                    Wave(
+                                        height: height * 0.08,
+                                        width: width * 0.45,
+                                        isFull: true),
+                                  ],
+                                )
+                          : textField()),
                   Visibility(
                     visible: recordButtonVisible,
                     child: GestureDetector(

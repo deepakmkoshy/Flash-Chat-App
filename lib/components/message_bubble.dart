@@ -1,36 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
 
-class MessageBubble extends StatelessWidget {
-  final String sender;
-  final String text;
+class TextMessageBubble extends StatelessWidget {
+  final QueryDocumentSnapshot message;
   final bool isMe;
-  final String type;
-  final String url;
-  final String duration;
-  final FlutterSoundPlayer mPlayer;
-
-  MessageBubble(
-      {this.sender,
-      this.text,
-      this.isMe,
-      this.type,
-      this.url,
-      this.duration,
-      this.mPlayer});
+  TextMessageBubble({this.message, this.isMe});
 
   @override
   Widget build(BuildContext context) {
-    
-
     return Padding(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment:
             isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Text(
-            sender,
+            message.data()['name'],
             style: TextStyle(fontSize: 12, color: Colors.black54),
           ),
           Material(
@@ -45,7 +30,7 @@ class MessageBubble extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               child: Text(
-                text,
+                message.data()['text'],
                 style: TextStyle(
                     color: isMe ? Colors.white : Colors.black54, fontSize: 15),
               ),
@@ -54,87 +39,5 @@ class MessageBubble extends StatelessWidget {
         ],
       ),
     );
-    // :Padding(
-    //     padding: const EdgeInsets.all(8.0),
-    //     child: Align(
-    //       alignment:
-    //           //  isMyMessage ?
-    //           Alignment.centerRight,
-    //       //  : Alignment.centerLeft,
-    //       child: Material(
-    //         borderRadius: BorderRadius.circular(10.0),
-    //         elevation: 2.0,
-    //         child: Container(
-    //           padding: EdgeInsets.all(10.0),
-    //           width: MediaQuery.of(context).size.width * 0.5,
-    //           child: Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //             crossAxisAlignment: CrossAxisAlignment.center,
-    //             children: <Widget>[
-    //               CircleAvatar(
-    //                   // child: isMyMessage
-    //                   //     ? Text(widget.currentUserName.substring(0, 1))
-    //                   //     : Text(widget.chatUserName.substring(0, 1)),
-    //                   child: Text("D")),
-    //               !mPlayer.isPlaying
-    //                   ? SizedBox()
-    //                   : AudioWave(
-    //                       height: height * 0.08,
-    //                       width: width * 0.15,
-    //                       beatRate: Duration(milliseconds: 100),
-    //                       spacing: 2.5,
-    //                       bars: [
-    //                         AudioWaveBar(
-    //                             height: 10, color: Colors.lightBlueAccent),
-    //                         AudioWaveBar(height: 30, color: Colors.blue),
-    //                         AudioWaveBar(height: 70, color: Colors.black),
-    //                         AudioWaveBar(height: 40),
-    //                         AudioWaveBar(height: 20, color: Colors.orange),
-    //                         AudioWaveBar(
-    //                             height: 10, color: Colors.lightBlueAccent),
-    //                         AudioWaveBar(height: 30, color: Colors.blue),
-    //                         AudioWaveBar(height: 70, color: Colors.black),
-    //                         AudioWaveBar(height: 40),
-    //                         AudioWaveBar(height: 20, color: Colors.orange),
-    //                         AudioWaveBar(
-    //                             height: 10, color: Colors.lightBlueAccent),
-    //                         AudioWaveBar(height: 30, color: Colors.blue),
-    //                         AudioWaveBar(height: 70, color: Colors.black),
-    //                         AudioWaveBar(height: 40),
-    //                         AudioWaveBar(height: 20, color: Colors.orange),
-    //                         // AudioWaveBar(
-    //                         //     height: 10, color: Colors.lightBlueAccent),
-    //                         // AudioWaveBar(height: 30, color: Colors.blue),
-    //                         // AudioWaveBar(height: 70, color: Colors.black),
-    //                         // AudioWaveBar(height: 40),
-    //                         // AudioWaveBar(height: 20, color: Colors.orange),
-    //                       ],
-    //                     ),
-    //               IconButton(
-    //                 icon: mPlayer.isPlaying
-    //                     ? Icon(
-    //                         Icons.pause_circle_filled,
-    //                         size: height * 0.06,
-    //                       )
-    //                     : Icon(
-    //                         Icons.play_circle_filled,
-    //                         size: height * 0.06,
-    //                       ),
-    //                 onPressed: () async {
-    //                   var newURL;
-
-    //                                         mPlayer.isPlaying
-    //                       ? stopPlayer()
-    //                       : play(
-    //                           ? "https://dl.espressif.com/dl/audio/gs-16b-1c-44100hz.aac"
-    //                           : newURL); //message.content
-    //                 },
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   );
   }
 }
