@@ -54,6 +54,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
+
   void getCurrentUser() async {
     try {
       final user = _auth.currentUser;
@@ -136,7 +137,7 @@ class _ChatScreenState extends State<ChatScreen> {
     });
 
     var tempDir = await getApplicationDocumentsDirectory();
-    String newFilePath = p.join(tempDir.path, _randomString(10));
+    String newFilePath = p.join(tempDir.path, randomString(10));
     _mPath = '$newFilePath.aac';
     var outputFile = File(_mPath);
     if (outputFile.existsSync()) {
@@ -168,10 +169,6 @@ class _ChatScreenState extends State<ChatScreen> {
     setState(() {});
   }
 
-  String _randomString(int length) {
-    return random.randomNumeric(length);
-  }
-
   Future<void> duration() async {
     await flutterSoundHelper.duration(_mPath).then((value) {
       setState(() {
@@ -199,26 +196,9 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void sendMessage() {
-    uploadPic().then((downloadUrl) {
+    uploadPic(_mPath).then((downloadUrl) {
       firestoreMsgUpload(downloadUrl);
     });
-  }
-
-  Future<String> uploadPic() async {
-    File file = File(_mPath);
-
-    Reference reference =
-        firebaseStorage.ref().child("rec/" + _randomString(10) + '.aac');
-
-    UploadTask uploadTask = reference.putFile(file);
-
-    var dowurl;
-
-    await uploadTask
-        .whenComplete(() async => dowurl = await reference.getDownloadURL());
-    var url = dowurl.toString();
-
-    return url;
   }
 
   firestoreMsgUpload(content) {
@@ -253,7 +233,7 @@ class _ChatScreenState extends State<ChatScreen> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     var content = message.data()['content'];
-    
+
     return (type.contains('txt'))
         ? TextMessageBubble(message: message, isMe: isMe)
         : Padding(
