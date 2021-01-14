@@ -13,7 +13,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:random_string/random_string.dart' as random;
+
+import 'login.dart';
 
 final _firestore = FirebaseFirestore.instance;
 auth.User loggedInUser;
@@ -42,18 +43,13 @@ class _ChatScreenState extends State<ChatScreen> {
   bool isTextMsg = true;
   String dur = "0:00";
 
-  String type;
   String content;
   String text;
-  String messageSender;
-  String durationFb;
-  String currentUser;
   bool isMe = true;
 
   String tmpUrl = "www";
 
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
-
 
   void getCurrentUser() async {
     try {
@@ -234,7 +230,7 @@ class _ChatScreenState extends State<ChatScreen> {
     final width = MediaQuery.of(context).size.width;
     var content = message.data()['content'];
 
-    return (type.contains('txt'))
+    return (message.data()['type'].contains('txt'))
         ? TextMessageBubble(message: message, isMe: isMe)
         : Padding(
             padding: const EdgeInsets.all(8.0),
@@ -260,13 +256,12 @@ class _ChatScreenState extends State<ChatScreen> {
                                   NetworkImage(message.data()['photo']),
                             ),
                             SizedBox(height: 2),
-                            Text(durationFb,
+                            Text(message.data()['duration'],
                                 style: TextStyle(
                                     color: isMe ? Colors.white : Colors.black))
                           ],
                         ),
-                        !(_mPlayer.isPlaying &&
-                                tmpUrl == content)
+                        !(_mPlayer.isPlaying && tmpUrl == content)
                             ? SizedBox()
                             : Wave(
                                 height: height * 0.08,
@@ -276,8 +271,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         IconButton(
                           padding: EdgeInsets.symmetric(horizontal: 0),
                           iconSize: MediaQuery.of(context).size.height * 0.06,
-                          icon: (_mPlayer.isPlaying &&
-                                  tmpUrl == content)
+                          icon: (_mPlayer.isPlaying && tmpUrl == content)
                               ? Icon(
                                   Icons.stop_circle_outlined,
                                   color: Colors.black,
@@ -287,9 +281,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   color: Colors.black,
                                 ),
                           onPressed: () async {
-                            _mPlayer.isPlaying
-                                ? stopPlayer()
-                                : play(content); //message.content
+                            _mPlayer.isPlaying ? stopPlayer() : play(content);
                           },
                         ),
                       ],
@@ -314,8 +306,12 @@ class _ChatScreenState extends State<ChatScreen> {
               icon: Icon(Icons.close),
               onPressed: () {
                 signOutGoogle();
-                Navigator.pop(context);
-              }),
+               Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) {
+                    return LoginNew();
+                  }), ModalRoute.withName('/'));
+                },
+              ),
         ],
         title: Text('⚡️Chat'),
         centerTitle: true,
@@ -402,7 +398,6 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
         ),
       ),
-      // ),
     );
   }
 
@@ -436,19 +431,8 @@ class _ChatScreenState extends State<ChatScreen> {
           final messages = snapshot.data.docs.reversed;
           List<Widget> messageWidgets = [];
           for (var message in messages) {
-            currentUser = email;
-            type = message.data()['type'];
-            messageSender = message.data()['sender'];
-            isMe = currentUser == messageSender;
-            Widget messageWidget;
-
-            if (type == 'txt') {
-              text = message.data()['text'];
-            } else {
-              content = message.data()['content'];
-              durationFb = message.data()['duration'];
-            }
-            messageWidget = messageBubble(message);
+            isMe = email == message.data()['sender'];
+            Widget messageWidget = messageBubble(message);
             messageWidgets.add(messageWidget);
           }
           return ListView(

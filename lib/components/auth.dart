@@ -55,10 +55,13 @@ void signOutGoogle() async {
   _auth.signOut();
 }
 
-Future<void> getCurrentUser() async { //For already logged in users
+Future<void> getCurrentUser() async {
+  //For already logged in users
   userMain = _auth.currentUser;
   if (userMain != null) {
     newUser = userMain;
     name = userMain.displayName;
-  }  
+    email = userMain.email;
+    imageUrl = userMain.photoURL;
+  }
 }
