@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_storage/firebase_storage.dart';
@@ -37,7 +36,6 @@ class _ChatScreenState extends State<ChatScreen> {
   String content;
   bool isMe = true;
 
-
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
   void getCurrentUser() async {
@@ -53,22 +51,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
-    super.dispose();
+    print("Entered disposal");
     messageTextController.dispose();
-    Provider.of<AudioProvider>(context, listen: false).dispRec();
-
-    // _mPlayer.closeAudioSession();
-    // _mPlayer = null;
-
-    // stopRecorder();
-    // _mRecorder.closeAudioSession();
-    // _mRecorder = null;
-    // if (_mPath != null) {
-    //   var outputFile = File(_mPath);
-    //   if (outputFile.existsSync()) {
-    //     outputFile.delete();
-    //   }
-    // }
+    super.dispose();
   }
 
   @override
@@ -77,16 +62,6 @@ class _ChatScreenState extends State<ChatScreen> {
     getCurrentUser();
 
     Provider.of<AudioProvider>(context, listen: false).initRec();
-    // _mPlayer.openAudioSession().then((value) {
-    //   setState(() {
-    //     _mPlayerIsInited = true;
-    //   });
-    // });
-    // openTheRecorder().then((value) {
-    //   setState(() {
-    //     _mRecorderIsInited = true;
-    //   });
-    // });
     super.initState();
   }
 
@@ -101,93 +76,8 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  //------------------------------------Audio Logic-------------
-
-  // Future<void> openTheRecorder() async {
-  //   await _mRecorder.openAudioSession();
-  //   _mRecorderIsInited = true;
-  // }
-
-  // Future<void> stopPlayer() async {
-  //   await _mPlayer.stopPlayer();
-  //   setState(() {});
-  // }
-
-  // Future<void> stopRecorder() async {
-  //   await _mRecorder.stopRecorder();
-  //   _mplaybackReady = true;
-  // }
-
-  // Future<void> record() async {
-  //   setState(() {
-  //     showWave = true;
-  //     isTextMsg = false;
-  //     sendButtonVisible = false;
-  //   });
-
-  //   var tempDir = await getApplicationDocumentsDirectory();
-  //   String newFilePath = p.join(tempDir.path, randomString(10));
-  //   _mPath = '$newFilePath.aac';
-  //   var outputFile = File(_mPath);
-  //   if (outputFile.existsSync()) {
-  //     await outputFile.delete();
-  //   }
-
-  //   assert(_mRecorderIsInited && _mPlayer.isStopped);
-  //   await _mRecorder.startRecorder(
-  //     toFile: _mPath,
-  //     codec: Codec.aacADTS,
-  //   );
-  //   setState(() {});
-  // }
-
-  // void play(String url) async {
-  //   tmpUrl = url;
-
-  //   assert(_mPlayerIsInited &&
-  //       _mplaybackReady &&
-  //       _mRecorder.isStopped &&
-  //       _mPlayer.isStopped);
-
-  //   await _mPlayer.startPlayer(
-  //       fromURI: url,
-  //       codec: Codec.aacADTS,
-  //       whenFinished: () {
-  //         setState(() {});
-  //       });
-  //   setState(() {});
-  // }
-
-  // Future<void> duration() async {
-  //   await flutterSoundHelper.duration(_mPath).then((value) {
-  //     setState(() {
-  //       if (value.inSeconds < 9) {
-  //         dur = "0:0${value.inSeconds}";
-  //       } else {
-  //         dur = "0:${value.inSeconds}";
-  //       }
-  //     });
-  //   });
-  // }
-
-  // void Function() getRecorder() {
-  //   if (!_mRecorderIsInited || !_mPlayer.isStopped) {
-  //     return null;
-  //   }
-
-  //   return _mRecorder.isStopped
-  //       ? record
-  //       : () {
-  //           stopRecorder().then((value) async {
-  //             await duration();
-  //           });
-  //         };
-  // }
-
-  //Aud log end
-
   void sendMessage() {
-    uploadPic( Provider.of<AudioProvider>(context, listen: false).mPath)
+    uploadPic(Provider.of<AudioProvider>(context, listen: false).mPath)
         .then((downloadUrl) {
       firestoreMsgUpload(downloadUrl);
     });
@@ -221,79 +111,6 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  Widget messageBubble(QueryDocumentSnapshot message, bool isMe) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-    var content = message.data()['content'];
-
-    return (message.data()['type'].contains('txt'))
-        ? TextMessageBubble(message: message, isMe: isMe)
-        : Consumer<AudioProvider>(builder: (context, aud, child) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment:
-                    isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                children: [
-                  Material(
-                    borderRadius: BorderRadius.circular(10.0),
-                    elevation: 2.0,
-                    color: isMe ? Colors.lightBlueAccent : Colors.white,
-                    child: Container(
-                      padding: EdgeInsets.all(6.0),
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage(message.data()['photo']),
-                              ),
-                              SizedBox(height: 2),
-                              Text(message.data()['duration'],
-                                  style: TextStyle(
-                                      color:
-                                          isMe ? Colors.white : Colors.black))
-                            ],
-                          ),
-                          !(aud.isPlaying && aud.tUrl == content)
-                              ? SizedBox()
-                              : Wave(
-                                  height: height * 0.08,
-                                  width: width * 0.15,
-                                  isFull: false,
-                                ),
-                          IconButton(
-                            padding: EdgeInsets.symmetric(horizontal: 0),
-                            iconSize: MediaQuery.of(context).size.height * 0.06,
-                            icon: (aud.isPlaying && aud.tUrl == content)
-                                ? Icon(
-                                    Icons.stop_circle_outlined,
-                                    color: Colors.black,
-                                  )
-                                : Icon(
-                                    Icons.play_arrow,
-                                    color: Colors.black,
-                                  ),
-                            onPressed: () async {
-                              aud.isPlaying
-                                  ? aud.stopPlayer()
-                                  : aud.play(content);
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          });
-  }
-
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -308,6 +125,8 @@ class _ChatScreenState extends State<ChatScreen> {
               icon: Icon(Icons.close),
               onPressed: () {
                 signOutGoogle();
+                //Disposing audio player
+                Provider.of<AudioProvider>(context, listen: false).dispRec();
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) {
                   return LoginNew();
@@ -348,7 +167,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         onTap: () => Fluttertoast.showToast(
                           msg: "Hold to record, release to send",
                         ),
-                        onLongPress: () async{
+                        onLongPress: () async {
                           setState(() {
                             sendButtonVisible = false;
                             showWave = true;
@@ -439,10 +258,10 @@ class _ChatScreenState extends State<ChatScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final messages = snapshot.data.docs.reversed;
-          List<Widget> messageWidgets = [];
+          List<Bubble> messageWidgets = [];
           for (var message in messages) {
             isMe = email == message.data()['sender'];
-            Widget messageWidget = messageBubble(message, isMe);
+            Bubble messageWidget = Bubble(message: message, isMe: isMe);
             messageWidgets.add(messageWidget);
           }
           return ListView(

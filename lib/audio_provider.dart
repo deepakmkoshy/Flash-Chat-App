@@ -8,8 +8,8 @@ import 'package:path/path.dart' as p;
 import 'package:flutter_sound/flutter_sound.dart';
 
 class AudioProvider extends ChangeNotifier {
-  FlutterSoundPlayer _mPlayer = FlutterSoundPlayer();
-  FlutterSoundRecorder _mRecorder = FlutterSoundRecorder();
+  FlutterSoundPlayer _mPlayer;
+  FlutterSoundRecorder _mRecorder;
   bool _mPlayerIsInited = false;
   bool _mRecorderIsInited = false;
   bool _mplaybackReady = true;
@@ -32,6 +32,8 @@ class AudioProvider extends ChangeNotifier {
 
   //For initState
   void initRec() {
+    _mPlayer = FlutterSoundPlayer();
+    _mRecorder = FlutterSoundRecorder();
     _mPlayer.openAudioSession().then((value) {
       _mPlayerIsInited = true;
       notifyListeners();
