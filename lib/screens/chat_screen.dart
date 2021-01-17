@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flashchat/audio_provider.dart';
 import 'package:flashchat/components/auth.dart';
-import 'package:flashchat/components/message_bubble.dart';
+import 'package:flashchat/components/message_stream.dart';
 import 'package:flashchat/components/wave.dart';
 import 'package:flashchat/constants.dart';
 import 'package:flutter/material.dart';
@@ -141,7 +141,7 @@ class _ChatScreenState extends State<ChatScreen> {
         body: SafeArea(
           child: Column(
             children: <Widget>[
-              Expanded(child: messagesStream()),
+              Expanded(child: MessagesStream()),
               Container(
                 decoration: kMessageContainerDecoration,
                 child: Row(
@@ -246,35 +246,6 @@ class _ChatScreenState extends State<ChatScreen> {
         messageText = value;
       },
       decoration: kMessageTextFieldDecoration,
-    );
-  }
-
-  Widget messagesStream() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: _firestore
-          .collection('messages')
-          .orderBy('created', descending: false)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final messages = snapshot.data.docs.reversed;
-          List<Bubble> messageWidgets = [];
-          for (var message in messages) {
-            isMe = email == message.data()['sender'];
-            Bubble messageWidget = Bubble(message: message, isMe: isMe);
-            messageWidgets.add(messageWidget);
-          }
-          return ListView(
-            reverse: true,
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            children: messageWidgets,
-          );
-        } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
     );
   }
 }
