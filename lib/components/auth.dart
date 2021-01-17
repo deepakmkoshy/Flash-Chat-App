@@ -61,6 +61,9 @@ Future<void> getCurrentUser() async {
   if (userMain != null) {
     newUser = userMain;
     name = userMain.displayName;
+     if (name.contains(" ")) {
+      name = name.substring(0, name.indexOf(" "));
+    }
     email = userMain.email;
     imageUrl = userMain.photoURL;
   }
