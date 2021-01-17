@@ -221,7 +221,7 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  Widget messageBubble(QueryDocumentSnapshot message) {
+  Widget messageBubble(QueryDocumentSnapshot message, bool isMe) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     var content = message.data()['content'];
@@ -442,7 +442,7 @@ class _ChatScreenState extends State<ChatScreen> {
           List<Widget> messageWidgets = [];
           for (var message in messages) {
             isMe = email == message.data()['sender'];
-            Widget messageWidget = messageBubble(message);
+            Widget messageWidget = messageBubble(message, isMe);
             messageWidgets.add(messageWidget);
           }
           return ListView(
