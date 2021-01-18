@@ -6,21 +6,13 @@ Implemented voice chat sucessfully with flutter sound, firebase storage. Lots of
 
 ## ToDo
 
-* Refactor the code
 * Add server timestamp
-* Use provider for managing state
 * Multiple users with separate chat channels
 * Voice/Video call with Agora
-* Already logged in to homepage
 
 ## Done
 
+* Refactor the code
 * Longpresses audio rec like in whatsapp
-
-
-## Refactoring in progress
-
-Separated the wave widget into separate file in components(Needs some refactoring within, check back later)
-
-Really dont have much idea on how to separate the audio recording logic from the ui part. Have to learn more and then come back to refactor. 
-Refactor branch will be used for refactoring tests
+* Use provider for managing state
+* Already logged in to homepage
