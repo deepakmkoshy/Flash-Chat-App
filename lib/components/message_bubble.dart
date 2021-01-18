@@ -4,10 +4,31 @@ import 'package:flashchat/components/wave.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+
+String times(QueryDocumentSnapshot message) {
+    DateTime dateCreated = message.data()["created"]?.toDate();
+    String fStr = "";
+    if (dateCreated != null) {
+      if (dateCreated.hour < 10) {
+        fStr = "0${dateCreated.hour}:";
+      } else {
+        fStr = "${dateCreated.hour}:";
+      }
+      if (dateCreated.minute < 10) {
+        fStr = "${fStr}0${dateCreated.minute}";
+      } else {
+        fStr = "$fStr${dateCreated.minute}";
+      }
+    }
+    return fStr;
+  }
+
 class TextMessageBubble extends StatelessWidget {
   final QueryDocumentSnapshot message;
   final bool isMe;
   TextMessageBubble({this.message, this.isMe});
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +43,7 @@ class TextMessageBubble extends StatelessWidget {
             style: TextStyle(fontSize: 12, color: Colors.black54),
           ),
           Material(
-            elevation: 5,
+            elevation: 2,
             borderRadius: BorderRadius.only(
               topRight: isMe ? Radius.zero : Radius.circular(30),
               topLeft: isMe ? Radius.circular(30) : Radius.zero,
@@ -32,13 +53,26 @@ class TextMessageBubble extends StatelessWidget {
             color: isMe ? Colors.lightBlueAccent : Colors.white,
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              child: Text(
-                message.data()['text'],
-                style: TextStyle(
-                    color: isMe ? Colors.white : Colors.black54, fontSize: 15),
-              ),
+              child:
+                  Text(
+                    message.data()['text'],
+                    style: TextStyle(
+                        color: isMe ? Colors.white : Colors.black54,
+                        fontSize: 15),
+                  ),
+                  // Text(
+                  //   times(),
+                  //   style: TextStyle(fontSize: 8),
+                  // )
+                
+              
             ),
           ),
+          SizedBox(height: 3,),
+          Text(
+                    times(message),
+                    style: TextStyle(fontSize: 8),
+                  )
         ],
       ),
     );
@@ -46,17 +80,16 @@ class TextMessageBubble extends StatelessWidget {
 }
 
 class Bubble extends StatefulWidget {
- final QueryDocumentSnapshot message;
+  final QueryDocumentSnapshot message;
   final bool isMe;
 
-   Bubble({this.message, this.isMe});
-  
+  Bubble({this.message, this.isMe});
+
   @override
   _BubbleState createState() => _BubbleState();
 }
 
 class _BubbleState extends State<Bubble> {
-  
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -69,8 +102,9 @@ class _BubbleState extends State<Bubble> {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
-                crossAxisAlignment:
-                    widget.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                crossAxisAlignment: widget.isMe
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
                 children: [
                   Material(
                     borderRadius: BorderRadius.circular(10.0),
@@ -86,14 +120,15 @@ class _BubbleState extends State<Bubble> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage(widget.message.data()['photo']),
+                                backgroundImage: NetworkImage(
+                                    widget.message.data()['photo']),
                               ),
                               SizedBox(height: 2),
                               Text(widget.message.data()['duration'],
                                   style: TextStyle(
-                                      color:
-                                          widget.isMe ? Colors.white : Colors.black))
+                                      color: widget.isMe
+                                          ? Colors.white
+                                          : Colors.black))
                             ],
                           ),
                           !(aud.isPlaying && aud.tUrl == content)
@@ -125,10 +160,15 @@ class _BubbleState extends State<Bubble> {
                       ),
                     ),
                   ),
+          SizedBox(height: 3,),
+
+                  Text(
+                    times(widget.message),
+                    style: TextStyle(fontSize: 8),
+                  )
                 ],
               ),
             );
           });
   }
-  }
-
+}
