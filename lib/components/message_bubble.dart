@@ -60,12 +60,6 @@ class TextMessageBubble extends StatelessWidget {
                         color: isMe ? Colors.white : Colors.black54,
                         fontSize: 15),
                   ),
-                  // Text(
-                  //   times(),
-                  //   style: TextStyle(fontSize: 8),
-                  // )
-                
-              
             ),
           ),
           SizedBox(height: 3,),

@@ -40,25 +40,23 @@ const kTextFieldDecoration = InputDecoration(
 );
 
 String randomString(int length) {
-    return random.randomNumeric(length);
-  }
-
+  return random.randomNumeric(length);
+}
 
 Future<String> uploadPic(String _mPath) async {
-    File file = File(_mPath);
+  File file = File(_mPath);
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
+  Reference reference =
+      firebaseStorage.ref().child("rec/" + randomString(10) + '.aac');
 
-    Reference reference =
-        firebaseStorage.ref().child("rec/" + randomString(10) + '.aac');
+  UploadTask uploadTask = reference.putFile(file);
 
-    UploadTask uploadTask = reference.putFile(file);
+  var dowurl;
 
-    var dowurl;
+  await uploadTask
+      .whenComplete(() async => dowurl = await reference.getDownloadURL());
+  var url = dowurl.toString();
 
-    await uploadTask
-        .whenComplete(() async => dowurl = await reference.getDownloadURL());
-    var url = dowurl.toString();
-
-    return url;
-  }
+  return url;
+}

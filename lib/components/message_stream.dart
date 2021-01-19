@@ -14,7 +14,8 @@ class MessagesStream extends StatelessWidget{
           .orderBy('created', descending: false)
           .snapshots(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.hasData) 
+        {
           final messages = snapshot.data.docs.reversed;
           List<Bubble> messageWidgets = [];
           for (var message in messages) {

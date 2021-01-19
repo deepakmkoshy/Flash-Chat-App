@@ -1,3 +1,4 @@
+import 'package:flashchat/screens/chat_home.dart';
 import 'package:flashchat/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -113,7 +114,7 @@ class _LoginNewState extends State<LoginNew> {
                     if (result != null) {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
-                        return ChatScreen();
+                        return ChatHome();
                       }));
                     }
                   }).catchError((onError) {
