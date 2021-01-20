@@ -36,6 +36,20 @@ class _ChatHomeState extends State<ChatHome> {
     });
   }
 
+  void checkUser() {
+    List<String> availUsers = [];
+
+    if (users.isNotEmpty) {
+      for (var item in users) {
+        if (item.startsWith(_controller.text)) {
+          
+          availUsers.add(item);
+        }
+      }
+    }
+    print(availUsers);
+  }
+
   void checkChatHome() {}
   @override
   Widget build(BuildContext context) {
@@ -51,9 +65,15 @@ class _ChatHomeState extends State<ChatHome> {
         child: Column(
           children: [
             TextField(
-              // controller: _controller,
+              controller: _controller,
               decoration: InputDecoration(labelText: "Search Users by Name"),
+              onChanged: (String str) {
+                setState(() {
+                  checkUser();
+                });
+              },
             ),
+            Container()
           ],
         ),
       ),
