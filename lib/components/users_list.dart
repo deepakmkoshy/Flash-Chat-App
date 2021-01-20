@@ -1,20 +1,21 @@
+import 'package:flashchat/models/user_model.dart';
 import 'package:flutter/material.dart';
 
-class UsersList extends StatelessWidget {
-  final String photoURL;
-  final String name;
+class UserWidget extends StatelessWidget {
+  final UserModel userModel;
 
-  const UsersList({Key key, this.photoURL, this.name}) : super(key: key);
+  const UserWidget({this.userModel});
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         CircleAvatar(
-          backgroundImage: NetworkImage(photoURL),
+          backgroundImage: NetworkImage(userModel.photoURL),
           radius: 20,
         ),
         SizedBox(width: 30),
-        Text(name),
+        Text(userModel.name),
       ],
     );
   }

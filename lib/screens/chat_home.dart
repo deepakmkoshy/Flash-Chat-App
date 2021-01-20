@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flashchat/components/users_list.dart';
+import 'package:flashchat/models/user_model.dart';
 import 'package:flutter/material.dart';
 
 class ChatHome extends StatefulWidget {
@@ -8,6 +10,7 @@ class ChatHome extends StatefulWidget {
 
 class _ChatHomeState extends State<ChatHome> {
   List<String> users = [];
+  List<QueryDocumentSnapshot> docList = [];
   bool isChatHomeEmpty = true;
   final _controller = TextEditingController();
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -27,27 +30,35 @@ class _ChatHomeState extends State<ChatHome> {
   void getUsersList() async {
     _firestore.collection("users").get().then((QuerySnapshot querySnapshot) {
       if (querySnapshot.docs.isNotEmpty) {
-        for (var snap in querySnapshot.docs) {
-          users.add(snap.id.toString());
-        }
-        print(users);
+        docList = querySnapshot.docs;
+        // for (var snap in querySnapshot.docs) {
+        //   users.add(snap.id.toString());
+        // }
+        // print(users);
         setState(() {});
       }
     });
   }
 
   void checkUser() {
-    List<String> availUsers = [];
-
-    if (users.isNotEmpty) {
-      for (var item in users) {
-        if (item.startsWith(_controller.text)) {
-          
-          availUsers.add(item);
+    List<UserModel> availUsers = [];
+    List<UserWidget> userslist = [];
+    if (docList.isNotEmpty) {
+      for (var item in docList) {
+        if (item.data()['name'].toString().startsWith(_controller.text)) {
+            availUsers.add(UserModel(name: item.data()['name'], photoURL: item.data()['photoURL'],
+             uid: item.id));
+             
+          // availUsers.add(item.data()['name'].toString());
         }
       }
+        for( var ind in availUsers){
+          userslist.add(UserWidget(userModel: ind));
+        }
+      
     }
     print(availUsers);
+    // print(userslist);
   }
 
   void checkChatHome() {}
@@ -73,7 +84,11 @@ class _ChatHomeState extends State<ChatHome> {
                 });
               },
             ),
-            Container()
+          //   ListView(
+          //   reverse: true,
+          //   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          //   children: m,
+          // );
           ],
         ),
       ),

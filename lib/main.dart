@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flashchat/audio_provider.dart';
 import 'package:flashchat/components/auth.dart';
+import 'package:flashchat/screens/chat_home.dart';
 import 'package:flashchat/screens/chat_screen.dart';
 import 'package:flashchat/screens/login.dart';
 import 'package:flashchat/screens/login_screen.dart';
@@ -32,7 +33,7 @@ class FlashChat extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         routes: routes,
-        home: (userMain != null) ? ChatScreen() : LoginNew()
+        home: (userMain != null) ? ChatHome() : LoginNew()
       
     );
   }
