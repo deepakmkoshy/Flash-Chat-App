@@ -10,10 +10,21 @@ class ChatHome extends StatefulWidget {
 
 class _ChatHomeState extends State<ChatHome> {
   List<String> users = [];
+  // List<String> testList = [
+  //   'Deepak',
+  //   'Dep',
+  //   'Kevin',
+  //   'Kelin',
+  //   'Mohasin',
+  //   'Moas',
+  //   'Mohes'
+  // ];
+  // List<Widget> finalList = [];
   List<QueryDocumentSnapshot> docList = [];
   bool isChatHomeEmpty = true;
   final _controller = TextEditingController();
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  List<UserWidget> userslist = [];
 
   @override
   void initState() {
@@ -31,34 +42,30 @@ class _ChatHomeState extends State<ChatHome> {
     _firestore.collection("users").get().then((QuerySnapshot querySnapshot) {
       if (querySnapshot.docs.isNotEmpty) {
         docList = querySnapshot.docs;
-        // for (var snap in querySnapshot.docs) {
-        //   users.add(snap.id.toString());
-        // }
-        // print(users);
+
         setState(() {});
       }
     });
   }
 
   void checkUser() {
-    List<UserModel> availUsers = [];
-    List<UserWidget> userslist = [];
+    userslist.clear();
     if (docList.isNotEmpty) {
       for (var item in docList) {
         if (item.data()['name'].toString().startsWith(_controller.text)) {
-            availUsers.add(UserModel(name: item.data()['name'], photoURL: item.data()['photoURL'],
-             uid: item.id));
-             
-          // availUsers.add(item.data()['name'].toString());
+          setState(() {
+            userslist.add(UserWidget(
+                userModel: UserModel(
+                    name: item.data()['name'],
+                    photoURL: item.data()['photoURL'],
+                    uid: item.id)));
+          });
         }
       }
-        for( var ind in availUsers){
-          userslist.add(UserWidget(userModel: ind));
-        }
-      
     }
-    print(availUsers);
-    // print(userslist);
+    setState(() {});
+    print(userslist);
+
   }
 
   void checkChatHome() {}
@@ -79,16 +86,25 @@ class _ChatHomeState extends State<ChatHome> {
               controller: _controller,
               decoration: InputDecoration(labelText: "Search Users by Name"),
               onChanged: (String str) {
-                setState(() {
-                  checkUser();
-                });
+                checkUser();
               },
+              keyboardType: TextInputType.name,
             ),
-          //   ListView(
-          //   reverse: true,
-          //   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          //   children: m,
-          // );
+            Expanded(
+              
+                          child: SizedBox(
+                            width: 200,
+                            child: ListView.separated(
+                                shrinkWrap: true,
+                itemCount: userslist.length,
+                itemBuilder: (context, index) {
+                  return userslist[index];
+                },
+                separatorBuilder: (BuildContext context, int index) => Divider(thickness: 2,),
+                
+              ),
+                          ),
+            )
           ],
         ),
       ),

@@ -8,15 +8,13 @@ class UserWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        CircleAvatar(
-          backgroundImage: NetworkImage(userModel.photoURL),
-          radius: 20,
-        ),
-        SizedBox(width: 30),
-        Text(userModel.name),
-      ],
-    );
+    return TextButton.icon(
+      onPressed: (){},
+      // style: ButtonStyle(backgroundColor: ),
+      label: Text(userModel.name),
+      icon: CircleAvatar(backgroundImage: NetworkImage(userModel.photoURL),
+            radius: 20,)
+      ,
+      );
   }
 }
