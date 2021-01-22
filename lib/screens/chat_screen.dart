@@ -18,6 +18,9 @@ auth.User loggedInUser;
 
 class ChatScreen extends StatefulWidget {
   static const String id = 'chat';
+  final String chatId;
+
+  const ChatScreen({this.chatId});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();

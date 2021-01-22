@@ -54,18 +54,20 @@ class _ChatHomeState extends State<ChatHome> {
       for (var item in docList) {
         if (item.data()['name'].toString().startsWith(_controller.text)) {
           setState(() {
-            userslist.add(UserWidget(
+            userslist.add(
+              UserWidget(
                 userModel: UserModel(
                     name: item.data()['name'],
                     photoURL: item.data()['photoURL'],
-                    uid: item.id)));
+                    uid: item.id),
+              ),
+            );
           });
         }
       }
     }
     setState(() {});
     print(userslist);
-
   }
 
   void checkChatHome() {}
@@ -91,19 +93,20 @@ class _ChatHomeState extends State<ChatHome> {
               keyboardType: TextInputType.name,
             ),
             Expanded(
-              
-                          child: SizedBox(
-                            width: 200,
-                            child: ListView.separated(
-                                shrinkWrap: true,
-                itemCount: userslist.length,
-                itemBuilder: (context, index) {
-                  return userslist[index];
-                },
-                separatorBuilder: (BuildContext context, int index) => Divider(thickness: 2,),
-                
+              child: SizedBox(
+                width: 200,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: userslist.length,
+                  itemBuilder: (context, index) {
+                    return userslist[index];
+                  },
+                  separatorBuilder: (BuildContext context, int index) =>
+                      Divider(
+                    thickness: 2,
+                  ),
+                ),
               ),
-                          ),
             )
           ],
         ),

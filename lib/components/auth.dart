@@ -6,6 +6,7 @@ final GoogleSignIn googleSignIn = GoogleSignIn();
 String name;
 String email;
 String imageUrl;
+String uid;
 auth.User newUser;
 auth.User userMain;
 
@@ -37,6 +38,8 @@ Future<String> signInWithGoogle() async {
 
     name = user.displayName;
     email = user.email;
+    uid = user.uid;
+
     imageUrl = user.photoURL;
 
     // Only taking the first part of the name, i.e., First Name
@@ -61,10 +64,11 @@ Future<void> getCurrentUser() async {
   if (userMain != null) {
     newUser = userMain;
     name = userMain.displayName;
-     if (name.contains(" ")) {
+    if (name.contains(" ")) {
       name = name.substring(0, name.indexOf(" "));
     }
     email = userMain.email;
+    uid = userMain.uid;
     imageUrl = userMain.photoURL;
   }
 }
