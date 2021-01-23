@@ -24,6 +24,7 @@ class _ChatHomeState extends State<ChatHome> {
   void initState() {
     super.initState();
     getUsersList();
+    getChatIdList();
   }
 
   @override
@@ -42,13 +43,14 @@ class _ChatHomeState extends State<ChatHome> {
     });
   }
 
-  void getChatIdList() {
+  void getChatIdList() async {
     _firestore
         .collection("newMessages")
         .get()
         .then((QuerySnapshot querySnapshot) {
       if (querySnapshot.docs.isNotEmpty) {
         chatIdList = querySnapshot.docs;
+        genChatUsers();
       } else {
         //New user with no chat
       }
@@ -58,11 +60,19 @@ class _ChatHomeState extends State<ChatHome> {
   //List for users for which chatid has been generated(already chatted)
   void genChatUsers() {
     for (var item in chatIdList) {
+      
       if (item.id.contains(uid.substring(0, 6))) {
-        chatUserslist
-            .add(ExistingUserWidget(userModel: otherUserDetails(item.id),chatId: item.id,));
+        print(
+            '##################@@@@@@@@@@@\n Entered genChatusers because chatId compatible');
+        chatUserslist.add(ExistingUserWidget(
+          userModel: otherUserDetails(item.id),
+          chatId: item.id,
+        ));
       }
     }
+    setState(() {
+      
+    });
   }
 
   //For getting the opp user details for existing already chatted users
@@ -145,7 +155,26 @@ class _ChatHomeState extends State<ChatHome> {
                   ),
                 ),
               ),
-            )
+            ),
+            Divider(
+              thickness: 2,
+            ),
+            Expanded(
+              child: SizedBox(
+                width: 200,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: chatUserslist.length,
+                  itemBuilder: (context, index) {
+                    return chatUserslist[index];
+                  },
+                  separatorBuilder: (BuildContext context, int index) =>
+                      Divider(
+                    thickness: 2,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

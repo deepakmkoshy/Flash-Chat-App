@@ -13,10 +13,17 @@ class ExistingUserWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final _firestore = FirebaseFirestore.instance;
-
     return TextButton.icon(
-      onPressed: () {},
+      onPressed: () {
+        print('Chat id of this user is: $chatId');
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return ChatScreen();
+            },
+          ),
+        );
+      },
       label: Text(userModel.name),
       icon: CircleAvatar(
         backgroundImage: NetworkImage(userModel.photoURL),
