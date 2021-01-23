@@ -1,7 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flashchat/components/auth.dart';
 import 'package:flashchat/models/user_model.dart';
-import 'package:flashchat/screens/chat_home.dart';
 import 'package:flashchat/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 

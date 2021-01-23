@@ -1,5 +1,4 @@
 import 'package:flashchat/screens/chat_home.dart';
-import 'package:flashchat/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../components/auth.dart';

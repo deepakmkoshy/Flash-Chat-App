@@ -25,12 +25,25 @@ class _ChatHomeState extends State<ChatHome> {
     super.initState();
     getUsersList();
     getChatIdList();
+    isFirstTimeUser();
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  //To add to users to users collection
+  void isFirstTimeUser() async {
+    if (docList.isNotEmpty) {
+      for (var item in docList) {
+        if (uid == item.id) {
+          return;
+        }
+      }
+    }
+    await _firestore.collection("users").doc(uid).set({'name': name, 'photoURL': imageUrl});
   }
 
   void getUsersList() async {
@@ -60,19 +73,14 @@ class _ChatHomeState extends State<ChatHome> {
   //List for users for which chatid has been generated(already chatted)
   void genChatUsers() {
     for (var item in chatIdList) {
-      
       if (item.id.contains(uid.substring(0, 6))) {
-        print(
-            '##################@@@@@@@@@@@\n Entered genChatusers because chatId compatible');
         chatUserslist.add(ExistingUserWidget(
           userModel: otherUserDetails(item.id),
           chatId: item.id,
         ));
       }
     }
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   //For getting the opp user details for existing already chatted users
