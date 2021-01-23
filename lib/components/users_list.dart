@@ -34,7 +34,6 @@ class UserWidget extends StatelessWidget {
           },
         );
       },
-      // style: ButtonStyle(backgroundColor: ),
       label: Text(userModel.name),
       icon: CircleAvatar(
         backgroundImage: NetworkImage(userModel.photoURL),

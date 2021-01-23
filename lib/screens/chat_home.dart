@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flashchat/components/auth.dart';
+import 'package:flashchat/components/existing_users_list.dart';
 import 'package:flashchat/components/users_list.dart';
 import 'package:flashchat/models/user_model.dart';
 import 'package:flutter/material.dart';
@@ -10,21 +12,13 @@ class ChatHome extends StatefulWidget {
 
 class _ChatHomeState extends State<ChatHome> {
   List<String> users = [];
-  // List<String> testList = [
-  //   'Deepak',
-  //   'Dep',
-  //   'Kevin',
-  //   'Kelin',
-  //   'Mohasin',
-  //   'Moas',
-  //   'Mohes'
-  // ];
-  // List<Widget> finalList = [];
   List<QueryDocumentSnapshot> docList = [];
+  List<QueryDocumentSnapshot> chatIdList = [];
   bool isChatHomeEmpty = true;
   final _controller = TextEditingController();
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<UserWidget> userslist = [];
+  List<ExistingUserWidget> chatUserslist = [];
 
   @override
   void initState() {
@@ -46,6 +40,50 @@ class _ChatHomeState extends State<ChatHome> {
         setState(() {});
       }
     });
+  }
+
+  void getChatIdList() {
+    _firestore
+        .collection("newMessages")
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      if (querySnapshot.docs.isNotEmpty) {
+        chatIdList = querySnapshot.docs;
+      } else {
+        //New user with no chat
+      }
+    });
+  }
+
+  //List for users for which chatid has been generated(already chatted)
+  void genChatUsers() {
+    for (var item in chatIdList) {
+      if (item.id.contains(uid.substring(0, 6))) {
+        chatUserslist
+            .add(ExistingUserWidget(userModel: otherUserDetails(item.id),chatId: item.id,));
+      }
+    }
+  }
+
+  //For getting the opp user details for existing already chatted users
+  UserModel otherUserDetails(String chatId) {
+    String otherId;
+    if (chatId.startsWith(uid.substring(0, 6))) {
+      otherId = chatId.substring(6, 12);
+    } else {
+      otherId = chatId.substring(0, 6);
+    }
+    if (docList.isNotEmpty) {
+      for (var item in docList) {
+        if (item.id.startsWith(otherId)) {
+          return UserModel(
+              name: item.data()['name'],
+              photoURL: item.data()['photoURL'],
+              uid: item.id);
+        }
+      }
+    }
+    return null;
   }
 
   void checkUser() {
