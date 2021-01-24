@@ -87,6 +87,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   firestoreMsgUpload(content) {
     var documentReference = FirebaseFirestore.instance
+        .collection('newMessages')
+        .doc(widget.chatId)
         .collection('messages')
         .doc(DateTime.now().millisecondsSinceEpoch.toString());
 
@@ -143,7 +145,10 @@ class _ChatScreenState extends State<ChatScreen> {
         body: SafeArea(
           child: Column(
             children: <Widget>[
-              Expanded(child: MessagesStream()),
+              Expanded(
+                  child: MessagesStream(
+                chatId: widget.chatId,
+              )),
               Container(
                 decoration: kMessageContainerDecoration,
                 child: Row(
@@ -204,7 +209,11 @@ class _ChatScreenState extends State<ChatScreen> {
                           onPressed: () {
                             if (isTextMsg) {
                               messageTextController.clear();
-                              _firestore.collection('messages').add({
+                              _firestore
+                                  .collection('newMessages')
+                                  .doc(widget.chatId)
+                                  .collection('messages')
+                                  .add({
                                 'text': messageText,
                                 'type': "txt",
                                 'name': name,

@@ -3,19 +3,24 @@ import 'package:flashchat/components/auth.dart';
 import 'package:flashchat/components/message_bubble.dart';
 import 'package:flutter/material.dart';
 
-class MessagesStream extends StatelessWidget{
+class MessagesStream extends StatelessWidget {
+  final String chatId;
+
+  const MessagesStream({this.chatId});
+
   @override
   Widget build(BuildContext context) {
     final _firestore = FirebaseFirestore.instance;
     bool isMe = true;
     return StreamBuilder<QuerySnapshot>(
       stream: _firestore
+          .collection('newMessages')
+          .doc(chatId)
           .collection('messages')
           .orderBy('created', descending: false)
           .snapshots(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) 
-        {
+        if (snapshot.hasData) {
           final messages = snapshot.data.docs.reversed;
           List<Bubble> messageWidgets = [];
           for (var message in messages) {

@@ -16,7 +16,7 @@ class ExistingUserWidget extends StatelessWidget {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) {
-              return ChatScreen();
+              return ChatScreen(chatId: chatId,);
             },
           ),
         );

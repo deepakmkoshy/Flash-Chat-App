@@ -12,6 +12,7 @@ class ChatHome extends StatefulWidget {
 
 class _ChatHomeState extends State<ChatHome> {
   List<String> users = [];
+  List<String> otherUsersIdList = [];
   List<QueryDocumentSnapshot> docList = [];
   List<QueryDocumentSnapshot> chatIdList = [];
   bool isChatHomeEmpty = true;
@@ -24,8 +25,6 @@ class _ChatHomeState extends State<ChatHome> {
   void initState() {
     super.initState();
     getUsersList();
-    getChatIdList();
-    isFirstTimeUser();
   }
 
   @override
@@ -43,15 +42,18 @@ class _ChatHomeState extends State<ChatHome> {
         }
       }
     }
-    await _firestore.collection("users").doc(uid).set({'name': name, 'photoURL': imageUrl});
+    await _firestore
+        .collection("users")
+        .doc(uid)
+        .set({'name': name, 'photoURL': imageUrl});
   }
 
   void getUsersList() async {
     _firestore.collection("users").get().then((QuerySnapshot querySnapshot) {
       if (querySnapshot.docs.isNotEmpty) {
         docList = querySnapshot.docs;
-
-        setState(() {});
+        getChatIdList();
+        isFirstTimeUser();
       }
     });
   }
@@ -62,7 +64,9 @@ class _ChatHomeState extends State<ChatHome> {
         .get()
         .then((QuerySnapshot querySnapshot) {
       if (querySnapshot.docs.isNotEmpty) {
-        chatIdList = querySnapshot.docs;
+        setState(() {
+          chatIdList = querySnapshot.docs;
+        });
         genChatUsers();
       } else {
         //New user with no chat
@@ -86,6 +90,7 @@ class _ChatHomeState extends State<ChatHome> {
   //For getting the opp user details for existing already chatted users
   UserModel otherUserDetails(String chatId) {
     String otherId;
+
     if (chatId.startsWith(uid.substring(0, 6))) {
       otherId = chatId.substring(6, 12);
     } else {
@@ -94,6 +99,7 @@ class _ChatHomeState extends State<ChatHome> {
     if (docList.isNotEmpty) {
       for (var item in docList) {
         if (item.id.startsWith(otherId)) {
+          otherUsersIdList.add(item.id);
           return UserModel(
               name: item.data()['name'],
               photoURL: item.data()['photoURL'],
@@ -106,24 +112,30 @@ class _ChatHomeState extends State<ChatHome> {
 
   void checkUser() {
     userslist.clear();
+    // print(otherUsersIdList);
     if (docList.isNotEmpty) {
       for (var item in docList) {
-        if (item.data()['name'].toString().startsWith(_controller.text)) {
-          setState(() {
-            userslist.add(
-              UserWidget(
-                userModel: UserModel(
-                    name: item.data()['name'],
-                    photoURL: item.data()['photoURL'],
-                    uid: item.id),
-              ),
+        // print(otherUsersIdList);
+        print('ITem id ${item.id} UID: $uid ${uid == item.id}');
+        if (!((otherUsersIdList.contains(item.id)) || (uid == item.id))) {
+          if (item.data()['name'].toString().startsWith(_controller.text)) {
+            setState(
+              () {
+                userslist.add(
+                  UserWidget(
+                    userModel: UserModel(
+                        name: item.data()['name'],
+                        photoURL: item.data()['photoURL'],
+                        uid: item.id),
+                  ),
+                );
+              },
             );
-          });
+          }
         }
       }
     }
     setState(() {});
-    print(userslist);
   }
 
   void checkChatHome() {}
