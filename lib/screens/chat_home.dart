@@ -49,13 +49,16 @@ class _ChatHomeState extends State<ChatHome> {
   }
 
   void getUsersList() async {
-    _firestore.collection("users").get().then((QuerySnapshot querySnapshot) {
-      if (querySnapshot.docs.isNotEmpty) {
-        docList = querySnapshot.docs;
-        getChatIdList();
+    //TODO: First user error
+    _firestore.collection("users").get().then(
+      (QuerySnapshot querySnapshot) {
+        if (querySnapshot.docs.isNotEmpty) {
+          docList = querySnapshot.docs;
+          getChatIdList();
+        }
         isFirstTimeUser();
-      }
-    });
+      },
+    );
   }
 
   void getChatIdList() async {
@@ -112,12 +115,10 @@ class _ChatHomeState extends State<ChatHome> {
 
   void checkUser() {
     userslist.clear();
-    // print(otherUsersIdList);
     if (docList.isNotEmpty) {
       for (var item in docList) {
-        // print(otherUsersIdList);
-        print('ITem id ${item.id} UID: $uid ${uid == item.id}');
         if (!((otherUsersIdList.contains(item.id)) || (uid == item.id))) {
+          //Existing users and own remove from search
           if (item.data()['name'].toString().startsWith(_controller.text)) {
             setState(
               () {
