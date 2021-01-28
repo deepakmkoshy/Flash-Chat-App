@@ -110,36 +110,17 @@ class _ChatHomeState extends State<ChatHome> {
     return null;
   }
 
-  // void checkUser() {
-  //   // userslist.clear();
-  //   if (docList.isNotEmpty) {
-  //     for (var item in docList) {
-  //       if (!((otherUsersIdList.contains(item.id)) || (uid == item.id))) {
-  //         //Existing users and own remove from search
-  //         if (item.data()['name'].toString().startsWith(_controller.text)) {
-  //           setState(
-  //             () {
-  //               userslist.add(
-  //                 UserWidget(
-  //                   userModel: UserModel(
-  //                       name: item.data()['name'],
-  //                       photoURL: item.data()['photoURL'],
-  //                       uid: item.id),
-  //                 ),
-  //               );
-  //             },
-  //           );
-  //         }
-  //       }
-  //     }
-  //   }
-  //   setState(() {});
-  // }
+  @override
+  void didChangeDependencies() {
+    setState(() {});
+    super.didChangeDependencies();
+  }
 
   void checkChatHome() {}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       floatingActionButton: FloatingActionButton(onPressed: (){
           Navigator.of(context).push(
           MaterialPageRoute(
@@ -161,46 +142,17 @@ class _ChatHomeState extends State<ChatHome> {
           SafeArea(
         child: Column(
           children: [
-            // TextField(
-            //   controller: _controller,
-            //   decoration: InputDecoration(labelText: "Search Users by Name"),
-            //   onChanged: (String str) {
-            //     checkUser();
-            //   },
-            //   keyboardType: TextInputType.name,
-            // ),
-            // Expanded(
-            //   child: SizedBox(
-            //     width: 200,
-            //     child: ListView.separated(
-            //       shrinkWrap: true,
-            //       itemCount: userslist.length,
-            //       itemBuilder: (context, index) {
-            //         return userslist[index];
-            //       },
-            //       separatorBuilder: (BuildContext context, int index) =>
-            //           Divider(
-            //         thickness: 2,
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            // Divider(
-            //   thickness: 2,
-            // ),
+           
             Expanded(
-              child: SizedBox(
-                width: 200,
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: chatUserslist.length,
-                  itemBuilder: (context, index) {
-                    return chatUserslist[index];
-                  },
-                  separatorBuilder: (BuildContext context, int index) =>
-                      Divider(
-                    thickness: 2,
-                  ),
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: chatUserslist.length,
+                itemBuilder: (context, index) {
+                  return chatUserslist[index];
+                },
+                separatorBuilder: (BuildContext context, int index) =>
+                    Divider(
+                  thickness: 2,
                 ),
               ),
             ),
