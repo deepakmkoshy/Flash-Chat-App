@@ -6,6 +6,7 @@ import 'package:flashchat/components/auth.dart';
 import 'package:flashchat/components/message_stream.dart';
 import 'package:flashchat/components/wave.dart';
 import 'package:flashchat/constants.dart';
+import 'package:flashchat/screens/chat_home.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -122,7 +123,16 @@ class _ChatScreenState extends State<ChatScreen> {
     return Consumer<AudioProvider>(builder: (context, aud, child) {
       return Scaffold(
         appBar: AppBar(
-          leading: null,
+          leading: IconButton(icon: Icon(Icons.arrow_back),
+          onPressed: (){
+            Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) {
+              return ChatHome();
+            },
+          ),
+        );
+          },),
           // automaticallyImplyLeading: false,
           actions: <Widget>[
             IconButton(

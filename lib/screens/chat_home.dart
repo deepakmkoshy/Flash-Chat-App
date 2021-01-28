@@ -119,19 +119,28 @@ class _ChatHomeState extends State<ChatHome> {
   void checkChatHome() {}
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-      floatingActionButton: FloatingActionButton(onPressed: (){
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
           Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return SearchUsers(otherUsersIdList: otherUsersIdList,
-              docList: docList,);
-            },
-          ),
-        );
-      },
-      child: Icon(Icons.add, size: 30,),),
+            MaterialPageRoute(
+              builder: (context) {
+                return SearchUsers(
+                  otherUsersIdList: otherUsersIdList,
+                  docList: docList,
+                );
+              },
+            ),
+          );
+        },
+        child: Icon(
+          Icons.add,
+          size: 30,
+        ),
+      ),
       appBar: AppBar(
         title: Text('⚡️Chat'),
         centerTitle: true,
@@ -142,7 +151,6 @@ class _ChatHomeState extends State<ChatHome> {
           SafeArea(
         child: Column(
           children: [
-           
             Expanded(
               child: ListView.separated(
                 shrinkWrap: true,
@@ -150,13 +158,13 @@ class _ChatHomeState extends State<ChatHome> {
                 itemBuilder: (context, index) {
                   return chatUserslist[index];
                 },
-                separatorBuilder: (BuildContext context, int index) =>
-                    Divider(
+                separatorBuilder: (BuildContext context, int index) => Divider(
+                  indent: width*0.25,
+                  endIndent: width*0.05,
                   thickness: 2,
                 ),
               ),
             ),
-            
           ],
         ),
       ),
