@@ -120,6 +120,7 @@ class _ChatHomeState extends State<ChatHome> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
@@ -148,26 +149,56 @@ class _ChatHomeState extends State<ChatHome> {
       ),
       body:
           //  isChatHomeEmpty?
-          SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.separated(
-                shrinkWrap: true,
-                itemCount: chatUserslist.length,
-                itemBuilder: (context, index) {
-                  return chatUserslist[index];
-                },
-                separatorBuilder: (BuildContext context, int index) => Divider(
-                  indent: width * 0.25,
-                  endIndent: width * 0.05,
-                  thickness: 2,
+          chatIdList.isEmpty
+              ? SafeArea(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      SizedBox(width: double.infinity),
+                      // SizedBox(
+                      //   height: height * 0.5,
+                      // ),
+                      Center(
+                        child: Text(
+                          'Click the here add new users',
+                          style: TextStyle(fontSize: width / 20),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 70.0),
+                        child: Icon(
+                          Icons.subdirectory_arrow_right_rounded,
+                          size: 100,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      )
+                    ],
+                  ),
+                )
+              : SafeArea(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: chatUserslist.length,
+                          itemBuilder: (context, index) {
+                            return chatUserslist[index];
+                          },
+                          separatorBuilder: (BuildContext context, int index) =>
+                              Divider(
+                            indent: width * 0.25,
+                            endIndent: width * 0.05,
+                            thickness: 2,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

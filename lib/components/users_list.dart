@@ -17,27 +17,30 @@ class UserWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _firestore = FirebaseFirestore.instance;
+    final width = MediaQuery.of(context).size.width;
 
     return TextButton.icon(
       onPressed: () {
         String _chatId = generateChatId();
         _firestore.collection('newMessages').doc(_chatId).set({}).then(
           (value) {
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) {
-                  return ChatScreen(chatId: _chatId,);
-                },
-              ),
-              (Route<dynamic> route) => false
-            );
+            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+              builder: (context) {
+                return ChatScreen(
+                  chatId: _chatId,
+                );
+              },
+            ), (Route<dynamic> route) => false);
           },
         );
       },
-      label: Text(userModel.name),
+      label: Text(
+        userModel.name,
+        style: TextStyle(fontSize: width / 20),
+      ),
       icon: CircleAvatar(
         backgroundImage: NetworkImage(userModel.photoURL),
-        radius: 20,
+        radius: width / 22,
       ),
     );
   }
