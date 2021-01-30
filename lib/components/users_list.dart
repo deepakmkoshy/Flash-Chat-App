@@ -23,12 +23,13 @@ class UserWidget extends StatelessWidget {
         String _chatId = generateChatId();
         _firestore.collection('newMessages').doc(_chatId).set({}).then(
           (value) {
-            Navigator.of(context).push(
+            Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) {
                   return ChatScreen(chatId: _chatId,);
                 },
               ),
+              (Route<dynamic> route) => false
             );
           },
         );

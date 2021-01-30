@@ -159,8 +159,8 @@ class _ChatHomeState extends State<ChatHome> {
                   return chatUserslist[index];
                 },
                 separatorBuilder: (BuildContext context, int index) => Divider(
-                  indent: width*0.25,
-                  endIndent: width*0.05,
+                  indent: width * 0.25,
+                  endIndent: width * 0.05,
                   thickness: 2,
                 ),
               ),
