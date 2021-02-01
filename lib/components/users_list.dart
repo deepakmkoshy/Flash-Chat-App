@@ -36,11 +36,11 @@ class UserWidget extends StatelessWidget {
       },
       label: Text(
         userModel.name,
-        style: TextStyle(fontSize: width / 20),
+        style: TextStyle(fontSize: width / 25),
       ),
       icon: CircleAvatar(
         backgroundImage: NetworkImage(userModel.photoURL),
-        radius: width / 22,
+        radius: width / 20,
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flashchat/components/auth.dart';
 import 'package:flashchat/components/existing_users_list.dart';
 import 'package:flashchat/models/user_model.dart';
+import 'package:flashchat/screens/login.dart';
 import 'package:flashchat/screens/search_users.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,6 @@ class ChatHome extends StatefulWidget {
 }
 
 class _ChatHomeState extends State<ChatHome> {
-  List<String> users = [];
   List<String> otherUsersIdList = [];
   List<QueryDocumentSnapshot> docList = [];
   List<QueryDocumentSnapshot> chatIdList = [];
@@ -40,14 +40,14 @@ class _ChatHomeState extends State<ChatHome> {
       }
     }
     await _firestore
-        .collection("users")
+        .collection('users')
         .doc(uid)
         .set({'name': name, 'photoURL': imageUrl});
   }
 
   void getUsersList() async {
     // First user error
-    _firestore.collection("users").get().then(
+    _firestore.collection('users').get().then(
       (QuerySnapshot querySnapshot) {
         if (querySnapshot.docs.isNotEmpty) {
           docList = querySnapshot.docs;
@@ -73,7 +73,6 @@ class _ChatHomeState extends State<ChatHome> {
         setState(() {
           isChatHomeEmpty = true;
         });
-        //New user with no chat
       }
     });
   }
@@ -118,7 +117,6 @@ class _ChatHomeState extends State<ChatHome> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
@@ -144,6 +142,19 @@ class _ChatHomeState extends State<ChatHome> {
         title: Text('⚡️Chat'),
         centerTitle: true,
         backgroundColor: Colors.lightBlueAccent,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.close),
+            onPressed: () {
+              signOutGoogle();
+              //Disposing audio player
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) {
+                return LoginNew();
+              }), ModalRoute.withName('/'));
+            },
+          ),
+        ],
       ),
       body: isChatHomeEmpty
           ? SafeArea(
@@ -152,9 +163,6 @@ class _ChatHomeState extends State<ChatHome> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   SizedBox(width: double.infinity),
-                  // SizedBox(
-                  //   height: height * 0.5,
-                  // ),
                   Center(
                     child: Text(
                       'Click the here add new users',
@@ -177,20 +185,23 @@ class _ChatHomeState extends State<ChatHome> {
           : SafeArea(
               child: Column(
                 children: [
-                  Expanded(
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      itemCount: chatUserslist.length,
-                      itemBuilder: (context, index) {
-                        return chatUserslist[index];
-                      },
-                      separatorBuilder: (BuildContext context, int index) =>
-                          Divider(
-                        indent: width * 0.25,
-                        endIndent: width * 0.05,
-                        thickness: 2,
-                      ),
+                  ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: chatUserslist.length,
+                    itemBuilder: (context, index) {
+                      return chatUserslist[index];
+                    },
+                    separatorBuilder: (BuildContext context, int index) =>
+                        Divider(
+                      indent: width * 0.25,
+                      endIndent: width * 0.05,
+                      thickness: 2,
                     ),
+                  ),
+                  Divider(
+                    indent: width * 0.25,
+                    endIndent: width * 0.05,
+                    thickness: 2,
                   ),
                 ],
               ),

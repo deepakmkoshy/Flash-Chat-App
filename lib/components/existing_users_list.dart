@@ -72,7 +72,8 @@ class _ExistingUserWidgetState extends State<ExistingUserWidget> {
                 boxShadow: [
                   BoxShadow(
                     color: Color(0x40000000),
-                    blurRadius: 4,
+                    spreadRadius: 0,
+                    blurRadius: 10,
                     offset: Offset(0, 5),
                   ),
                 ],
