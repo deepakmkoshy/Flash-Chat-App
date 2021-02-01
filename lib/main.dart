@@ -14,11 +14,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await getCurrentUser();
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => AudioProvider(),
-      child: 
-    FlashChat()));
+  runApp(ChangeNotifierProvider(
+      create: (context) => AudioProvider(), child: FlashChat()));
 }
 
 class FlashChat extends StatelessWidget {
@@ -33,8 +30,12 @@ class FlashChat extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         routes: routes,
-        home: (userMain != null) ? ChatHome() : LoginNew()
-      
-    );
+        theme: ThemeData(
+          fontFamily: 'Montserrat-SemiBold',
+          textTheme: TextTheme(
+            bodyText2: TextStyle(fontSize: 15),
+          ),
+        ),
+        home: (userMain != null) ? ChatHome() : LoginNew());
   }
 }
