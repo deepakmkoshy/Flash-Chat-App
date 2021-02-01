@@ -31,7 +31,12 @@ class _SearchUsersState extends State<SearchUsers> {
         if (!((widget.otherUsersIdList.contains(item.id)) ||
             (uid == item.id))) {
           //Existing users and own remove from search
-          if (item.data()['name'].toString().startsWith(_controller.text) && _controller.text != '') {
+          if (item
+                  .data()['name']
+                  .toLowerCase()
+                  .toString()
+                  .startsWith(_controller.text.toLowerCase()) &&
+              _controller.text != '') {
             setState(
               () {
                 userslist.add(

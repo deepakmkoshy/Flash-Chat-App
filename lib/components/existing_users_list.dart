@@ -32,7 +32,6 @@ class _ExistingUserWidgetState extends State<ExistingUserWidget> {
         .then((QuerySnapshot qs) {
       if (qs.docs.isNotEmpty) {
         if (qs.docs[0].data()['type'] == 'txt') {
-
           lMsg = qs.docs[0].data()['text'];
         } else {
           lMsg = 'Voice Message (${qs.docs[0].data()['duration']})';
@@ -50,20 +49,21 @@ class _ExistingUserWidgetState extends State<ExistingUserWidget> {
     final width = MediaQuery.of(context).size.width;
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.0,
-      horizontal: 20),
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
-        onTap: (){
+        onTap: () {
           Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) {
-              return ChatScreen(chatId: widget.chatId,);
-            },
-          ),
-        );
+            MaterialPageRoute(
+              builder: (context) {
+                return ChatScreen(
+                  chatId: widget.chatId,
+                );
+              },
+            ),
+          );
         },
-              child: Row(
+        child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
             Container(
@@ -93,17 +93,31 @@ class _ExistingUserWidgetState extends State<ExistingUserWidget> {
                 Text(
                   widget.userModel.name,
                   style: TextStyle(
+                    fontFamily: 'Montserrat-Bold',
                     fontSize: width / 22,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: width * 0.01,),
-                Text(lMsg),
+                SizedBox(
+                  height: width * 0.01,
+                ),
+                Text(
+                  lMsg,
+                  style: TextStyle(
+                    fontFamily: 'Montserrat-Medium',
+                    fontSize: width / 30,
+                  ),
+                ),
               ],
             ),
-
-Spacer(),
-            Text(date),
+            Spacer(),
+            Text(
+              date,
+              style: TextStyle(
+                fontFamily: 'Montserrat-Medium',
+                fontSize: width / 30,
+              ),
+            ),
           ],
         ),
       ),

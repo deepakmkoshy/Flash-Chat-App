@@ -15,7 +15,7 @@ class _ChatHomeState extends State<ChatHome> {
   List<String> otherUsersIdList = [];
   List<QueryDocumentSnapshot> docList = [];
   List<QueryDocumentSnapshot> chatIdList = [];
-  bool isChatHomeEmpty = true;
+  bool isChatHomeEmpty = false;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<ExistingUserWidget> chatUserslist = [];
 
@@ -65,10 +65,14 @@ class _ChatHomeState extends State<ChatHome> {
         .then((QuerySnapshot querySnapshot) {
       if (querySnapshot.docs.isNotEmpty) {
         setState(() {
+          isChatHomeEmpty = false;
           chatIdList = querySnapshot.docs;
         });
         genChatUsers();
       } else {
+        setState(() {
+          isChatHomeEmpty = true;
+        });
         //New user with no chat
       }
     });
@@ -110,12 +114,6 @@ class _ChatHomeState extends State<ChatHome> {
     return null;
   }
 
-  @override
-  void didChangeDependencies() {
-    setState(() {});
-    super.didChangeDependencies();
-  }
-
   void checkChatHome() {}
   @override
   Widget build(BuildContext context) {
@@ -147,58 +145,56 @@ class _ChatHomeState extends State<ChatHome> {
         centerTitle: true,
         backgroundColor: Colors.lightBlueAccent,
       ),
-      body:
-          //  isChatHomeEmpty?
-          chatIdList.isEmpty
-              ? SafeArea(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      SizedBox(width: double.infinity),
-                      // SizedBox(
-                      //   height: height * 0.5,
-                      // ),
-                      Center(
-                        child: Text(
-                          'Click the here add new users',
-                          style: TextStyle(fontSize: width / 20),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 70.0),
-                        child: Icon(
-                          Icons.subdirectory_arrow_right_rounded,
-                          size: 100,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      )
-                    ],
+      body: isChatHomeEmpty
+          ? SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(width: double.infinity),
+                  // SizedBox(
+                  //   height: height * 0.5,
+                  // ),
+                  Center(
+                    child: Text(
+                      'Click the here add new users',
+                      style: TextStyle(fontSize: width / 20),
+                    ),
                   ),
-                )
-              : SafeArea(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: ListView.separated(
-                          shrinkWrap: true,
-                          itemCount: chatUserslist.length,
-                          itemBuilder: (context, index) {
-                            return chatUserslist[index];
-                          },
-                          separatorBuilder: (BuildContext context, int index) =>
-                              Divider(
-                            indent: width * 0.25,
-                            endIndent: width * 0.05,
-                            thickness: 2,
-                          ),
-                        ),
-                      ),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.only(right: 70.0),
+                    child: Icon(
+                      Icons.subdirectory_arrow_right_rounded,
+                      size: 100,
+                    ),
                   ),
-                ),
+                  SizedBox(
+                    height: 5,
+                  )
+                ],
+              ),
+            )
+          : SafeArea(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      itemCount: chatUserslist.length,
+                      itemBuilder: (context, index) {
+                        return chatUserslist[index];
+                      },
+                      separatorBuilder: (BuildContext context, int index) =>
+                          Divider(
+                        indent: width * 0.25,
+                        endIndent: width * 0.05,
+                        thickness: 2,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
     );
   }
 }
