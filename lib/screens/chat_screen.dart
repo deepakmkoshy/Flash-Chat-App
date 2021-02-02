@@ -128,6 +128,7 @@ class _ChatScreenState extends State<ChatScreen> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
+              Provider.of<AudioProvider>(context, listen: false).dispRec();
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) {
@@ -139,17 +140,29 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           // automaticallyImplyLeading: false,
           actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                signOutGoogle();
-                //Disposing audio player
-                Provider.of<AudioProvider>(context, listen: false).dispRec();
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) {
-                  return LoginNew();
-                }), ModalRoute.withName('/'));
+            PopupMenuButton(
+              onSelected: (value) {
+                print('Pressed');
+                _firestore
+                    .collection('newMessages')
+                    .doc(widget.chatId)
+                    .collection('messages')
+                    .get()
+                    .then(
+                      (res) => res.docs.forEach(
+                        (element) {
+                          element.reference.delete();
+                        },
+                      ),
+                    );
               },
+              icon: Icon(Icons.more_vert),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 1,
+                  child: Text('Clear Chat'),
+                ),
+              ],
             ),
           ],
           titleSpacing: 0,

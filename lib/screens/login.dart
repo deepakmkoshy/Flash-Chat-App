@@ -13,9 +13,8 @@ class LoginNew extends StatefulWidget {
 class _LoginNewState extends State<LoginNew> {
   @override
   Widget build(BuildContext context) {
-
     final width = MediaQuery.of(context).size.width;
-  final height = MediaQuery.of(context).size.height;
+    final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: Container(
@@ -26,7 +25,6 @@ class _LoginNewState extends State<LoginNew> {
               height: height,
               color: Colors.grey[100],
             ),
-
             Positioned(
               top: -height * 0.2,
               right: -width * 0.1,
@@ -59,7 +57,6 @@ class _LoginNewState extends State<LoginNew> {
                 )
               ],
             ),
-
             Align(
               alignment: Alignment(0, -0.22),
               child: Container(
@@ -78,7 +75,6 @@ class _LoginNewState extends State<LoginNew> {
                 ),
               ),
             ),
-
             Align(
               alignment: Alignment(0, 0.1),
               child: Row(
@@ -88,18 +84,22 @@ class _LoginNewState extends State<LoginNew> {
                     child: Divider(
                       thickness: 1,
                       color: Colors.black,
-                      indent: width*0.1,
-                      endIndent: width*0.05,
+                      indent: width * 0.1,
+                      endIndent: width * 0.05,
                     ),
                   ),
-                  Text("Sign in",style: TextStyle(fontSize: height / 40, 
-                  ),),
+                  Text(
+                    "Sign in",
+                    style: TextStyle(
+                      fontSize: height / 40,
+                    ),
+                  ),
                   Expanded(
                     child: Divider(
                       thickness: 1,
                       color: Colors.black,
-                      indent: width*0.05,
-                      endIndent: width*0.1,
+                      indent: width * 0.05,
+                      endIndent: width * 0.1,
                     ),
                   ),
                 ],
@@ -111,14 +111,12 @@ class _LoginNewState extends State<LoginNew> {
                 onPressed: () {
                   signInWithGoogle().then((result) {
                     if (result != null) {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (context) {
                         return ChatHome();
-                      }));
+                      }), (Route<dynamic> route) => false);
                     }
-                  }).catchError((onError) {
-                   
-                  });
+                  }).catchError((onError) {});
                 },
                 splashColor: Colors.grey,
                 color: Colors.white,
@@ -149,12 +147,10 @@ class _LoginNewState extends State<LoginNew> {
                 ),
               ),
             ),
-
             Align(
-              alignment: Alignment(0,0.9),
+              alignment: Alignment(0, 0.9),
               child: Text("0.2.0"),
             )
-            
           ],
         ),
       ),
