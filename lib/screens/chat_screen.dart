@@ -6,6 +6,7 @@ import 'package:flashchat/components/auth.dart';
 import 'package:flashchat/components/message_stream.dart';
 import 'package:flashchat/components/wave.dart';
 import 'package:flashchat/constants.dart';
+import 'package:flashchat/models/user_model.dart';
 import 'package:flashchat/screens/chat_home.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -20,8 +21,9 @@ auth.User loggedInUser;
 class ChatScreen extends StatefulWidget {
   static const String id = 'chat';
   final String chatId;
+  final UserModel otherUserModel;
 
-  const ChatScreen({this.chatId});
+  const ChatScreen({this.chatId, this.otherUserModel});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -123,16 +125,18 @@ class _ChatScreenState extends State<ChatScreen> {
     return Consumer<AudioProvider>(builder: (context, aud, child) {
       return Scaffold(
         appBar: AppBar(
-          leading: IconButton(icon: Icon(Icons.arrow_back),
-          onPressed: (){
-            Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) {
-              return ChatHome();
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return ChatHome();
+                  },
+                ),
+              );
             },
           ),
-        );
-          },),
           // automaticallyImplyLeading: false,
           actions: <Widget>[
             IconButton(
@@ -148,8 +152,22 @@ class _ChatScreenState extends State<ChatScreen> {
               },
             ),
           ],
-          title: Text('⚡️Chat'),
-          centerTitle: true,
+          titleSpacing: 0,
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                backgroundImage:
+                    NetworkImage('${widget.otherUserModel.photoURL}'),
+              ),
+              SizedBox(width: 5),
+              Text(
+                '${widget.otherUserModel.name}',
+                style: TextStyle(fontFamily: 'Montserrat-Medium'),
+              ),
+            ],
+          ),
           backgroundColor: Colors.lightBlueAccent,
         ),
         body: SafeArea(

@@ -27,6 +27,7 @@ class UserWidget extends StatelessWidget {
             Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
               builder: (context) {
                 return ChatScreen(
+                  otherUserModel: userModel,
                   chatId: _chatId,
                 );
               },

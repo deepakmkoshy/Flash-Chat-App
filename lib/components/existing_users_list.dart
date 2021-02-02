@@ -57,6 +57,7 @@ class _ExistingUserWidgetState extends State<ExistingUserWidget> {
             MaterialPageRoute(
               builder: (context) {
                 return ChatScreen(
+                  otherUserModel: widget.userModel,
                   chatId: widget.chatId,
                 );
               },
