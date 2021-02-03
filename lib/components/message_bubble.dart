@@ -35,10 +35,10 @@ class TextMessageBubble extends StatelessWidget {
         crossAxisAlignment:
             isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          Text(
-            message.data()['name'],
-            style: TextStyle(fontSize: 12, color: Colors.black54),
-          ),
+          // Text(
+          //   message.data()['name'],
+          //   style: TextStyle(fontSize: 12, color: Colors.black54),
+          // ),
           Material(
             elevation: 2,
             borderRadius: BorderRadius.only(

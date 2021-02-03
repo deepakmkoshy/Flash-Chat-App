@@ -243,7 +243,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           padding: EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 8.0),
                           child: Container(
-                            padding: EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(4.0),
                             decoration: BoxDecoration(
                                 color: Colors.lightBlueAccent,
                                 borderRadius: BorderRadius.circular(32)),
@@ -259,7 +259,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     Visibility(
                       visible: sendButtonVisible,
                       child: Padding(
-                        padding: EdgeInsets.all(2),
+                        padding: EdgeInsets.fromLTRB(4, 0, 8, 8),
                         child: IconButton(
                           icon: Icon(
                             Icons.send,
@@ -302,7 +302,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget textField() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 4, 0, 4),
+      padding: const EdgeInsets.fromLTRB(8, 4, 0, 8),
       child: TextField(
         controller: messageTextController,
         onChanged: (value) {
