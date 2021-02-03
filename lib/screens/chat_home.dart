@@ -143,9 +143,8 @@ class _ChatHomeState extends State<ChatHome> {
         centerTitle: true,
         backgroundColor: Colors.lightBlueAccent,
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.close),
-            onPressed: () {
+          PopupMenuButton(
+            onSelected: (value) {
               signOutGoogle();
               //Disposing audio player
               Navigator.of(context).pushAndRemoveUntil(
@@ -153,6 +152,13 @@ class _ChatHomeState extends State<ChatHome> {
                 return LoginNew();
               }), ModalRoute.withName('/'));
             },
+            icon: Icon(Icons.more_vert),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 1,
+                child: Text('Logout'),
+              ),
+            ],
           ),
         ],
       ),
