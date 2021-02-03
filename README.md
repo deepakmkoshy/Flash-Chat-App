@@ -10,7 +10,7 @@ Implemented voice chat sucessfully with flutter sound, firebase storage.
 
 ## ToDo
 
-* Voice/Video call with Agora
+* TextInputField decoration like whatsapp
 
 ## Done
 

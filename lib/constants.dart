@@ -4,7 +4,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:random_string/random_string.dart' as random;
 
-
 const kSendButtonTextStyle = TextStyle(
   color: Colors.lightBlueAccent,
   fontWeight: FontWeight.bold,
@@ -14,7 +13,11 @@ const kSendButtonTextStyle = TextStyle(
 const kMessageTextFieldDecoration = InputDecoration(
   contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
   hintText: 'Type your message here...',
-  border: InputBorder.none,
+  
+  border: OutlineInputBorder(
+      borderRadius: BorderRadius.all(
+    Radius.circular(20),
+  )),
 );
 
 const kMessageContainerDecoration = BoxDecoration(

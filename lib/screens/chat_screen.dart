@@ -13,8 +13,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
-import 'login.dart';
-
 final _firestore = FirebaseFirestore.instance;
 auth.User loggedInUser;
 
@@ -138,11 +136,10 @@ class _ChatScreenState extends State<ChatScreen> {
               );
             },
           ),
-          // automaticallyImplyLeading: false,
           actions: <Widget>[
             PopupMenuButton(
               onSelected: (value) {
-                print('Pressed');
+                //Deleting a collection in firestore
                 _firestore
                     .collection('newMessages')
                     .doc(widget.chatId)
@@ -191,7 +188,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 chatId: widget.chatId,
               )),
               Container(
-                decoration: kMessageContainerDecoration,
+                // decoration: kMessageContainerDecoration,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
@@ -230,10 +227,17 @@ class _ChatScreenState extends State<ChatScreen> {
                           sendMessage();
                         },
                         child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Icon(
-                            Icons.keyboard_voice,
-                            size: width * 0.1,
+                          padding: EdgeInsets.all(8.0),
+                          child: Container(
+                            padding: EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(32)),
+                            child: Icon(
+                              Icons.keyboard_voice,
+                              size: width * 0.1,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -283,21 +287,24 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget textField() {
-    return TextField(
-      controller: messageTextController,
-      onChanged: (value) {
-        setState(() {
-          if (value == '') {
-            sendButtonVisible = false;
-            recordButtonVisible = true;
-          } else {
-            sendButtonVisible = true;
-            recordButtonVisible = false;
-          }
-        });
-        messageText = value;
-      },
-      decoration: kMessageTextFieldDecoration,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        controller: messageTextController,
+        onChanged: (value) {
+          setState(() {
+            if (value == '') {
+              sendButtonVisible = false;
+              recordButtonVisible = true;
+            } else {
+              sendButtonVisible = true;
+              recordButtonVisible = false;
+            }
+          });
+          messageText = value;
+        },
+        decoration: kMessageTextFieldDecoration,
+      ),
     );
   }
 }
