@@ -185,23 +185,28 @@ class _ChatHomeState extends State<ChatHome> {
           : SafeArea(
               child: Column(
                 children: [
-                  ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: chatUserslist.length,
-                    itemBuilder: (context, index) {
-                      return chatUserslist[index];
-                    },
-                    separatorBuilder: (BuildContext context, int index) =>
-                        Divider(
+                  Flexible(
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      itemCount: chatUserslist.length,
+                      itemBuilder: (context, index) {
+                        return chatUserslist[index];
+                      },
+                      separatorBuilder: (BuildContext context, int index) =>
+                          Divider(
+                        indent: width * 0.25,
+                        endIndent: width * 0.05,
+                        thickness: 2,
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: !isChatHomeEmpty,
+                    child: Divider(
                       indent: width * 0.25,
                       endIndent: width * 0.05,
                       thickness: 2,
                     ),
-                  ),
-                  Divider(
-                    indent: width * 0.25,
-                    endIndent: width * 0.05,
-                    thickness: 2,
                   ),
                 ],
               ),
