@@ -107,7 +107,7 @@ class AudioProvider extends ChangeNotifier {
 
   Future<void> duration() async {
     await flutterSoundHelper.duration(_mPath).then((value) {
-      if (value.inSeconds < 9) {
+      if (value.inSeconds < 10) {
         dur = "0:0${value.inSeconds}";
       } else {
         dur = "0:${value.inSeconds}";

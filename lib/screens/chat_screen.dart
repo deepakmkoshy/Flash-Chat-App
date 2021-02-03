@@ -198,11 +198,24 @@ class _ChatScreenState extends State<ChatScreen> {
                                 ? textField()
                                 : Row(
                                     children: [
-                                      SizedBox(width: width * 0.05),
-                                      Wave(
-                                          height: height * 0.08,
-                                          width: width * 0.45,
-                                          isFull: true),
+                                      SizedBox(width: width * 0.025),
+                                      Container(
+                                        width: width * 0.786,
+                                        height: height * 0.075,
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 8),
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 8),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20.0),
+                                            border: Border.all(
+                                                color: Colors.black45)),
+                                        child: Wave(
+                                            height: height * 0.08,
+                                            width: width * 0.45,
+                                            isFull: true),
+                                      ),
                                     ],
                                   )
                             : textField()),
