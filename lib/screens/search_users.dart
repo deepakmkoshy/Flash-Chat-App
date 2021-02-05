@@ -74,8 +74,10 @@ class _SearchUsersState extends State<SearchUsers> {
                 decoration: InputDecoration(
                     labelText: "Search Users by Name",
                     focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black45),
                         borderRadius: BorderRadius.circular(10)),
                     enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black45),
                         borderRadius: BorderRadius.circular(10))),
                 onChanged: (String str) {
                   checkUser();

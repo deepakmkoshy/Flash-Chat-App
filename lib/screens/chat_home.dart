@@ -152,18 +152,54 @@ class _ChatHomeState extends State<ChatHome> {
         actions: <Widget>[
           PopupMenuButton(
             onSelected: (value) {
-              signOutGoogle();
-              //Disposing audio player
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) {
-                return LoginNew();
-              }), ModalRoute.withName('/'));
+              switch (value) {
+                case 1:
+                  chatUserslist.clear();
+                  getUsersList();
+                  break;
+                case 2:
+                  signOutGoogle();
+                  //Disposing audio player
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) {
+                    return LoginNew();
+                  }), ModalRoute.withName('/'));
+                  break;
+              }
             },
             icon: Icon(Icons.more_vert),
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 1,
-                child: Text('Logout'),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.refresh,
+                      color: Colors.black,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text('Refresh'),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 2,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.exit_to_app,
+                      color: Colors.black,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text('Logout'),
+                  ],
+                ),
               ),
             ],
           ),
