@@ -15,7 +15,6 @@ class _LoginNewState extends State<LoginNew> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    bool isLoading = false;
 
     return Scaffold(
       body: Container(
