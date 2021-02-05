@@ -188,7 +188,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 chatId: widget.chatId,
               )),
               Container(
-                // decoration: kMessageContainerDecoration,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
@@ -241,7 +240,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 8.0),
+                              vertical: 10.0, horizontal: 8.0),
                           child: Container(
                             padding: EdgeInsets.all(4.0),
                             decoration: BoxDecoration(

@@ -65,7 +65,6 @@ class _ChatHomeState extends State<ChatHome> {
         .then((QuerySnapshot querySnapshot) {
       if (querySnapshot.docs.isNotEmpty) {
         setState(() {
-          isChatHomeEmpty = false;
           chatIdList = querySnapshot.docs;
         });
         genChatUsers();
@@ -87,7 +86,15 @@ class _ChatHomeState extends State<ChatHome> {
         ));
       }
     }
-    setState(() {});
+    if (chatUserslist.isEmpty) {
+      setState(() {
+        isChatHomeEmpty = true;
+      });
+    } else {
+      setState(() {
+        isChatHomeEmpty = false;
+      });
+    }
   }
 
   //For getting the opp user details for existing already chatted users
@@ -171,7 +178,7 @@ class _ChatHomeState extends State<ChatHome> {
                   SizedBox(width: double.infinity),
                   Center(
                     child: Text(
-                      'Click the here add new users',
+                      'Click here to add new users',
                       style: TextStyle(fontSize: width / 20),
                     ),
                   ),

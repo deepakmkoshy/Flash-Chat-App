@@ -15,6 +15,7 @@ class _LoginNewState extends State<LoginNew> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+    bool isLoading = false;
 
     return Scaffold(
       body: Container(
@@ -108,15 +109,33 @@ class _LoginNewState extends State<LoginNew> {
             Align(
               alignment: Alignment(0, 0.4),
               child: RaisedButton(
-                onPressed: () {
-                  signInWithGoogle().then((result) {
-                    if (result != null) {
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) {
-                        return ChatHome();
-                      }), (Route<dynamic> route) => false);
-                    }
-                  }).catchError((onError) {});
+                onPressed: () async {
+                  showDialog(
+                      context: context,
+                      // barrierColor: Colors.,
+                      barrierDismissible: false,
+                      builder: (context) {
+                        return AlertDialog(
+                          // contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          // backgroundColor: Colors.white.withOpacity(0),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CircularProgressIndicator(),
+                            ],
+                          ),
+                        );
+                      });
+                  try {
+                    signInWithGoogle().then((result) {
+                      if (result != null) {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (context) {
+                          return ChatHome();
+                        }), (Route<dynamic> route) => false);
+                      }
+                    }).catchError((onError) {});
+                  } catch (Exception) {}
                 },
                 splashColor: Colors.grey,
                 color: Colors.white,
