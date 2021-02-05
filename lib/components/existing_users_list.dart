@@ -18,11 +18,20 @@ class _ExistingUserWidgetState extends State<ExistingUserWidget> {
   String date = '';
   @override
   void initState() {
+    print('Entered4');
+
     lastMsg();
     super.initState();
   }
 
+  @override
+  void didUpdateWidget(ExistingUserWidget oldWidget) {
+    lastMsg();
+    super.didUpdateWidget(oldWidget);
+  }
+
   void lastMsg() {
+    print('Called Lastmsg');
     final _firestore = FirebaseFirestore.instance.collection('newMessages');
     _firestore
         .doc(widget.chatId)

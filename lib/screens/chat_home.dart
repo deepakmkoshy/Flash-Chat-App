@@ -80,6 +80,7 @@ class _ChatHomeState extends State<ChatHome> {
   void genChatUsers() {
     for (var item in chatIdList) {
       if (item.id.contains(uid.substring(0, 6))) {
+
         chatUserslist.add(ExistingUserWidget(
           userModel: otherUserDetails(item.id),
           chatId: item.id,
@@ -120,7 +121,6 @@ class _ChatHomeState extends State<ChatHome> {
     return null;
   }
 
-  void checkChatHome() {}
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
