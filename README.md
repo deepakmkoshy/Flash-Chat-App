@@ -10,7 +10,7 @@ Implemented voice chat sucessfully with flutter sound, firebase storage.
 
 ## ToDo
 
-* TextInputField decoration like whatsapp
+* Rebranding
 
 ## Done
 
@@ -20,3 +20,4 @@ Implemented voice chat sucessfully with flutter sound, firebase storage.
 * Longpresses audio rec like in whatsapp
 * Use provider for managing state
 * Already logged in to homepage
+* TextInputField decoration like whatsapp
