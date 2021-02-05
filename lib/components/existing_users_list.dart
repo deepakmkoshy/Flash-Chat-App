@@ -30,6 +30,23 @@ class _ExistingUserWidgetState extends State<ExistingUserWidget> {
     super.didUpdateWidget(oldWidget);
   }
 
+  String times(DateTime dateCreated) {
+    String fStr = "";
+    if (dateCreated != null) {
+      if (dateCreated.hour < 10) {
+        fStr = "0${dateCreated.hour}:";
+      } else {
+        fStr = "${dateCreated.hour}:";
+      }
+      if (dateCreated.minute < 10) {
+        fStr = "${fStr}0${dateCreated.minute}";
+      } else {
+        fStr = "$fStr${dateCreated.minute}";
+      }
+    }
+    return fStr;
+  }
+
   void lastMsg() {
     print('Called Lastmsg');
     final _firestore = FirebaseFirestore.instance.collection('newMessages');
@@ -46,7 +63,13 @@ class _ExistingUserWidgetState extends State<ExistingUserWidget> {
           lMsg = 'Voice Message (${qs.docs[0].data()['duration']})';
         }
         DateTime dateCreated = qs.docs[0].data()['created']?.toDate();
-        date = '${dateCreated.day}/${dateCreated.month}/21';
+        DateTime thisDate = DateTime.now();
+
+        if (thisDate.day == dateCreated.day) {
+          date = times(qs.docs[0].data()['created']?.toDate());
+        } else {
+          date = '${dateCreated.day}/${dateCreated.month}/21';
+        }
 
         setState(() {});
       }

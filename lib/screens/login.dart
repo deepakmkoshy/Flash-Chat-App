@@ -167,7 +167,7 @@ class _LoginNewState extends State<LoginNew> {
             ),
             Align(
               alignment: Alignment(0, 0.9),
-              child: Text("0.3.0"),
+              child: Text("0.3.5"),
             )
           ],
         ),
