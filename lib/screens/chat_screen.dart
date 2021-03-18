@@ -121,178 +121,190 @@ class _ChatScreenState extends State<ChatScreen> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return Consumer<AudioProvider>(builder: (context, aud, child) {
-      return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Provider.of<AudioProvider>(context, listen: false).dispRec();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return ChatHome();
-                  },
-                ),
-              );
-            },
-          ),
-          actions: <Widget>[
-            PopupMenuButton(
-              onSelected: (value) {
-                //Deleting a collection in firestore
-                _firestore
-                    .collection('newMessages')
-                    .doc(widget.chatId)
-                    .collection('messages')
-                    .get()
-                    .then(
-                      (res) => res.docs.forEach(
-                        (element) {
-                          element.reference.delete();
-                        },
-                      ),
-                    );
+      return WillPopScope(
+        onWillPop: () {
+          // Provider.of<AudioProvider>(context, listen: false).dispRec();
+          return Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) {
+                return ChatHome();
               },
-              icon: Icon(Icons.more_vert),
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: 1,
-                  child: Text('Clear Chat'),
+            ),
+          );
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Provider.of<AudioProvider>(context, listen: false).dispRec();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ChatHome();
+                    },
+                  ),
+                );
+              },
+            ),
+            actions: <Widget>[
+              PopupMenuButton(
+                onSelected: (value) {
+                  //Deleting a collection in firestore
+                  _firestore
+                      .collection('newMessages')
+                      .doc(widget.chatId)
+                      .collection('messages')
+                      .get()
+                      .then(
+                        (res) => res.docs.forEach(
+                          (element) {
+                            element.reference.delete();
+                          },
+                        ),
+                      );
+                },
+                icon: Icon(Icons.more_vert),
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 1,
+                    child: Text('Clear Chat'),
+                  ),
+                ],
+              ),
+            ],
+            titleSpacing: 0,
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                CircleAvatar(
+                  backgroundImage:
+                      NetworkImage('${widget.otherUserModel.photoURL}'),
+                ),
+                SizedBox(width: 5),
+                Text(
+                  '${widget.otherUserModel.name}',
+                  style: TextStyle(fontFamily: 'Montserrat-Medium'),
                 ),
               ],
             ),
-          ],
-          titleSpacing: 0,
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              CircleAvatar(
-                backgroundImage:
-                    NetworkImage('${widget.otherUserModel.photoURL}'),
-              ),
-              SizedBox(width: 5),
-              Text(
-                '${widget.otherUserModel.name}',
-                style: TextStyle(fontFamily: 'Montserrat-Medium'),
-              ),
-            ],
+            backgroundColor: Colors.lightBlueAccent,
           ),
-          backgroundColor: Colors.lightBlueAccent,
-        ),
-        body: SafeArea(
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                  child: MessagesStream(
-                chatId: widget.chatId,
-              )),
-              Container(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                        child: showWave
-                            ? aud.isRecStopped
-                                ? textField()
-                                : Row(
-                                    children: [
-                                      SizedBox(width: width * 0.025),
-                                      Container(
-                                        width: width * 0.786,
-                                        height: height * 0.075,
-                                        padding:
-                                            EdgeInsets.symmetric(horizontal: 8),
-                                        margin:
-                                            EdgeInsets.symmetric(vertical: 8),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            border: Border.all(
-                                                color: Colors.black45)),
-                                        child: Wave(
-                                            height: height * 0.08,
-                                            width: width * 0.45,
-                                            isFull: true),
-                                      ),
-                                    ],
-                                  )
-                            : textField()),
-                    Visibility(
-                      visible: recordButtonVisible,
-                      child: GestureDetector(
-                        onTap: () => Fluttertoast.showToast(
-                          msg: "Hold to record, release to send",
-                        ),
-                        onLongPress: () async {
-                          setState(() {
-                            sendButtonVisible = false;
-                            showWave = true;
-                            isTextMsg = false;
-                          });
-                          aud.getRecorder();
-                        },
-                        onLongPressEnd: (longPressEndDetails) {
-                          aud.stopRecorder().then((value) async {
-                            await aud.duration();
-                          });
-                          sendMessage();
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 8.0),
-                          child: Container(
-                            padding: EdgeInsets.all(4.0),
-                            decoration: BoxDecoration(
-                                color: Colors.lightBlueAccent,
-                                borderRadius: BorderRadius.circular(32)),
-                            child: Icon(
-                              Icons.keyboard_voice,
-                              size: width * 0.1,
-                              color: Colors.white,
+          body: SafeArea(
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                    child: MessagesStream(
+                  chatId: widget.chatId,
+                )),
+                Container(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                          child: showWave
+                              ? aud.isRecStopped
+                                  ? textField()
+                                  : Row(
+                                      children: [
+                                        SizedBox(width: width * 0.025),
+                                        Container(
+                                          width: width * 0.786,
+                                          height: height * 0.075,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          margin:
+                                              EdgeInsets.symmetric(vertical: 8),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0),
+                                              border: Border.all(
+                                                  color: Colors.black45)),
+                                          child: Wave(
+                                              height: height * 0.08,
+                                              width: width * 0.45,
+                                              isFull: true),
+                                        ),
+                                      ],
+                                    )
+                              : textField()),
+                      Visibility(
+                        visible: recordButtonVisible,
+                        child: GestureDetector(
+                          onTap: () => Fluttertoast.showToast(
+                            msg: "Hold to record, release to send",
+                          ),
+                          onLongPress: () async {
+                            setState(() {
+                              sendButtonVisible = false;
+                              showWave = true;
+                              isTextMsg = false;
+                            });
+                            aud.getRecorder();
+                          },
+                          onLongPressEnd: (longPressEndDetails) {
+                            aud.stopRecorder().then((value) async {
+                              await aud.duration();
+                            });
+                            sendMessage();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 8.0),
+                            child: Container(
+                              padding: EdgeInsets.all(4.0),
+                              decoration: BoxDecoration(
+                                  color: Colors.lightBlueAccent,
+                                  borderRadius: BorderRadius.circular(32)),
+                              child: Icon(
+                                Icons.keyboard_voice,
+                                size: width * 0.1,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Visibility(
-                      visible: sendButtonVisible,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(4, 0, 8, 8),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.send,
-                            size: width * 0.1,
+                      Visibility(
+                        visible: sendButtonVisible,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(4, 0, 8, 8),
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.send,
+                              size: width * 0.1,
+                            ),
+                            onPressed: () {
+                              if (isTextMsg) {
+                                messageTextController.clear();
+                                _firestore
+                                    .collection('newMessages')
+                                    .doc(widget.chatId)
+                                    .collection('messages')
+                                    .add({
+                                  'text': messageText,
+                                  'type': "txt",
+                                  'name': name,
+                                  'sender': loggedInUser.email,
+                                  'created': FieldValue.serverTimestamp()
+                                });
+                                setState(() {
+                                  sendButtonVisible = false;
+                                  recordButtonVisible = true;
+                                });
+                              } else {
+                                sendMessage();
+                              }
+                            },
                           ),
-                          onPressed: () {
-                            if (isTextMsg) {
-                              messageTextController.clear();
-                              _firestore
-                                  .collection('newMessages')
-                                  .doc(widget.chatId)
-                                  .collection('messages')
-                                  .add({
-                                'text': messageText,
-                                'type': "txt",
-                                'name': name,
-                                'sender': loggedInUser.email,
-                                'created': FieldValue.serverTimestamp()
-                              });
-                              setState(() {
-                                sendButtonVisible = false;
-                                recordButtonVisible = true;
-                              });
-                            } else {
-                              sendMessage();
-                            }
-                          },
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );
