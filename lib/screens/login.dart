@@ -1,3 +1,4 @@
+import 'package:flashchat/constants.dart';
 import 'package:flashchat/screens/chat_home.dart';
 import 'package:flutter/material.dart';
 
@@ -29,17 +30,16 @@ class _LoginNewState extends State<LoginNew> {
               top: -height * 0.2,
               right: -width * 0.1,
               child: Container(
-                  height: height * 0.6,
-                  width: width * 1.2,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: <Color>[
-                          Colors.purple,
-                          Colors.deepPurpleAccent,
-                        ],
-                      ),
-                      color: Colors.purple,
-                      borderRadius: BorderRadius.all(Radius.circular(300)))),
+                height: height * 0.6,
+                width: width * 1.2,
+                decoration: BoxDecoration(
+                
+                  color: primaryColor,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(300),
+                  ),
+                ),
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -61,6 +61,7 @@ class _LoginNewState extends State<LoginNew> {
               alignment: Alignment(0, -0.22),
               child: Container(
                 decoration: BoxDecoration(
+                    color: Colors.white,
                     boxShadow: [
                       BoxShadow(
                           color: Color(0x40000000),
@@ -111,12 +112,9 @@ class _LoginNewState extends State<LoginNew> {
                 onPressed: () async {
                   showDialog(
                       context: context,
-                      // barrierColor: Colors.,
                       barrierDismissible: false,
                       builder: (context) {
                         return AlertDialog(
-                          // contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          // backgroundColor: Colors.white.withOpacity(0),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [

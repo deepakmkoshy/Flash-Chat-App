@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:random_string/random_string.dart' as random;
 
 const Color primaryColor = Color(0XFF00C9B1);
-const Color chatColor = Color(0XFF00C9B1);
+// const Color chatColor = Color(0XFFF08F2E);
 
 const kSendButtonTextStyle = TextStyle(
   color: Colors.lightBlueAccent,
