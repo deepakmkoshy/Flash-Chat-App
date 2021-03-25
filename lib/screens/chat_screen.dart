@@ -13,7 +13,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
-
 final _firestore = FirebaseFirestore.instance;
 auth.User loggedInUser;
 
@@ -190,7 +189,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
               ],
             ),
-            backgroundColor: Colors.lightBlueAccent,
+            backgroundColor: primaryColor,
           ),
           body: SafeArea(
             child: Column(
@@ -256,7 +255,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             child: Container(
                               padding: EdgeInsets.all(4.0),
                               decoration: BoxDecoration(
-                                  color: Colors.lightBlueAccent,
+                                  color: primaryColor,
                                   borderRadius: BorderRadius.circular(32)),
                               child: Icon(
                                 Icons.keyboard_voice,

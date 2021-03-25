@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flashchat/components/auth.dart';
 import 'package:flashchat/components/users_list.dart';
+import 'package:flashchat/constants.dart';
 import 'package:flashchat/models/user_model.dart';
 import 'package:flutter/material.dart';
 
@@ -60,9 +61,9 @@ class _SearchUsersState extends State<SearchUsers> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('⚡️Search users'),
+        title: Text('Add users'),
         centerTitle: true,
-        backgroundColor: Colors.lightBlueAccent,
+        backgroundColor: primaryColor,
       ),
       body: SafeArea(
         child: Column(

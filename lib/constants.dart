@@ -4,6 +4,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:random_string/random_string.dart' as random;
 
+const Color primaryColor = Color(0XFF00C9B1);
+const Color chatColor = Color(0XFF00C9B1);
+
 const kSendButtonTextStyle = TextStyle(
   color: Colors.lightBlueAccent,
   fontWeight: FontWeight.bold,
@@ -13,7 +16,6 @@ const kSendButtonTextStyle = TextStyle(
 const kMessageTextFieldDecoration = InputDecoration(
   contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
   hintText: 'Type your message here...',
-  
   border: OutlineInputBorder(
       borderRadius: BorderRadius.all(
     Radius.circular(20),

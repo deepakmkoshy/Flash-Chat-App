@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flashchat/constants.dart';
 import 'package:flashchat/services/audio_provider.dart';
 import 'package:flashchat/components/wave.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,7 @@ class TextMessageBubble extends StatelessWidget {
               bottomLeft: Radius.circular(30),
               bottomRight: Radius.circular(30),
             ),
-            color: isMe ? Colors.lightBlueAccent : Colors.white,
+            color: isMe ? primaryColor : Colors.white,
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               child: Text(

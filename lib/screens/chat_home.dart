@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flashchat/components/auth.dart';
 import 'package:flashchat/components/existing_users_list.dart';
+import 'package:flashchat/constants.dart';
 import 'package:flashchat/models/user_model.dart';
 import 'package:flashchat/screens/login.dart';
 import 'package:flashchat/screens/search_users.dart';
@@ -80,7 +81,6 @@ class _ChatHomeState extends State<ChatHome> {
   void genChatUsers() {
     for (var item in chatIdList) {
       if (item.id.contains(uid.substring(0, 6))) {
-
         chatUserslist.add(ExistingUserWidget(
           userModel: otherUserDetails(item.id),
           chatId: item.id,
@@ -128,6 +128,8 @@ class _ChatHomeState extends State<ChatHome> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       floatingActionButton: FloatingActionButton(
+        backgroundColor: primaryColor,
+        splashColor: primaryColor.withOpacity(0.5),
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -146,9 +148,9 @@ class _ChatHomeState extends State<ChatHome> {
         ),
       ),
       appBar: AppBar(
-        title: Text('⚡️Chat'),
+        title: Text('Flash Chat'),
         centerTitle: true,
-        backgroundColor: Colors.lightBlueAccent,
+        backgroundColor: primaryColor,
         actions: <Widget>[
           PopupMenuButton(
             onSelected: (value) {
@@ -159,7 +161,7 @@ class _ChatHomeState extends State<ChatHome> {
                   break;
                 case 2:
                   signOutGoogle();
-                  //Disposing audio player
+
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) {
                     return LoginNew();
