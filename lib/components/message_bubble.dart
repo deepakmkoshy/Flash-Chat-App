@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flashchat/audio_provider.dart';
+import 'package:flashchat/services/audio_provider.dart';
 import 'package:flashchat/components/wave.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flashchat/audio_provider.dart';
+import 'package:flashchat/services/audio_provider.dart';
 import 'package:flashchat/components/auth.dart';
 import 'package:flashchat/components/message_stream.dart';
 import 'package:flashchat/components/wave.dart';
@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+
 
 final _firestore = FirebaseFirestore.instance;
 auth.User loggedInUser;
