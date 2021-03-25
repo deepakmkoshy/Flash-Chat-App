@@ -73,13 +73,16 @@ class _SearchUsersState extends State<SearchUsers> {
               child: TextField(
                 controller: _controller,
                 decoration: InputDecoration(
-                    labelText: "Search Users by Name",
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black45),
-                        borderRadius: BorderRadius.circular(10)),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black45),
-                        borderRadius: BorderRadius.circular(10))),
+                  labelText: "Search Users by Name",
+                  labelStyle: TextStyle(color: primaryColor),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black45),
+                      borderRadius: BorderRadius.circular(10)),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black45),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 onChanged: (String str) {
                   checkUser();
                 },
