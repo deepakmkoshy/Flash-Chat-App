@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:flashchat/constants.dart';
+import 'package:flashchat/services/upload_audio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as p;
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 class AudioProvider extends ChangeNotifier {
   FlutterSoundPlayer _mPlayer;

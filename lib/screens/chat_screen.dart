@@ -8,6 +8,7 @@ import 'package:flashchat/components/wave.dart';
 import 'package:flashchat/constants.dart';
 import 'package:flashchat/models/user_model.dart';
 import 'package:flashchat/screens/chat_home.dart';
+import 'package:flashchat/services/upload_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -80,7 +81,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void sendMessage() {
-    uploadPic(Provider.of<AudioProvider>(context, listen: false).mPath)
+    uploadAudio(Provider.of<AudioProvider>(context, listen: false).mPath)
         .then((downloadUrl) {
       firestoreMsgUpload(downloadUrl);
     });
