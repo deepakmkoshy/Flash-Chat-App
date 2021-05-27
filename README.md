@@ -8,9 +8,6 @@ V 0.1.0: Basic text chat app
 
 Implemented voice chat sucessfully with flutter sound, firebase storage.
 
-## ToDo
-
-* Rebranding
 
 ## Done
 
